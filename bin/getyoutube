@@ -1,4 +1,23 @@
 #!/usr/bin/env python3
+# getyoutube
+#
+# Copyright (C) 2010 -  Wei-Ning Huang (AZ) <aitjcize@gmail.com>
+# All Rights reserved.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software Foundation,
+# Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#
 
 import sys
 import os
@@ -8,7 +27,7 @@ from optparse import OptionParser
 
 # Program Information
 program_name = 'getyoutube'
-program_version = '0.1'
+program_version = '0.1.5'
 
 class getyoutube:
     def __init__(self, addr):
@@ -30,9 +49,9 @@ class getyoutube:
             # id
             self.id = re.search('(?<=v=)[^&]*', addr).group(0)
             # t
-            self.t = re.search('(?<="t": ").{46}', data).group(0)
+            self.t = re.search('(?<=&t=).{46}', data).group(0)
             # title
-            self.title = re.search('(?<=title=")[^"]*"', data).group(0)
+            self.title = re.search('(?<=content=")[^"]*"', data).group(0)
             self.title = self.title.strip('"')
         except AttributeError:
             print('\nerror: some error occured, please retry.')
@@ -50,7 +69,7 @@ class getyoutube:
                 'MP4-720p': (22, 'mp4'), 'MP4-1080p': (37, 'mp4')}
         if data.find('22%2F2000000%') == -1:
             self.fmt['MP4-720p'] = (-1, 'mp4')
-        if data.find('37%2F4000000%2F9%2F0%2F115') == -1: 
+        if data.find('37%2F4000000%2F9%2F0%2F115') == -1:
             self.fmt['MP4-1080p'] = (-1, 'mp4')
 
     def show(self):
