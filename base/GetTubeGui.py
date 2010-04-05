@@ -23,7 +23,7 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
-import urllib, time, gettext
+import os.path, urllib, time, gettext
 from GetTube import GetTube
 from Misc import *
 _ = gettext.gettext
@@ -37,6 +37,7 @@ class GetTubeGui(GetTube):
         self.window.set_position(gtk.WIN_POS_CENTER_ALWAYS)
         self.window.set_border_width(10)
         self.format = 'MP4'
+        self.out_prefix = os.path.expanduser('~/')
 
         # Widgets
         self.logo = gtk.Button()
@@ -51,7 +52,7 @@ class GetTubeGui(GetTube):
         self.infolabel = gtk.Label()
         self.info = _('Video Title: {0}\nVideo ID:    {1}\nVideo Key:   {2}')
         self.formatframe = gtk.Frame(_('Available Formats'))
-        self.download_button = gtk.Button(_('Download'))
+        self.download_button = gtk.Button(_('Download to ...'))
         self.download_progressbar = gtk.ProgressBar()
         self.download_progressbar.set_text(_('Ready'))
         self.fmt_but = []
@@ -111,7 +112,7 @@ class GetTubeGui(GetTube):
         self.fmt_but[3].connect('toggled', self.choose, 'MP4-720p')
         self.fmt_but[4].connect('toggled', self.choose, 'FLV')
         self.clear_button.connect('clicked', self.clear_address)
-        self.download_button.connect('clicked', self.download)
+        self.download_button.connect('clicked', self.choose_file_dialog)
         self.window.connect('destroy', lambda wid: gtk.main_quit())
         self.parse_button.connect('clicked', self.parse)
         self.logo.connect('clicked', self.about_dialog)
@@ -136,12 +137,22 @@ class GetTubeGui(GetTube):
     def progress_bar_pulse(self):
         count = 0
         self.progress_bar.set_pulse_step(0.1)
-        while count < 20:
+        while count < 0:
             time.sleep(0.1)
             self.progress_bar.pulse()
             count += 1
             while gtk.events_pending():
                 gtk.main_iteration()
+
+    def info_block(self):
+        self.infolabel.set_text(self.info.format(self.title, self.id,
+            self.t))
+        self.mainframe.show_all()
+        self.progress_bar.hide()
+        total, avail = self.show()
+        for i in range(5):
+            if self.fmt_but[i].get_label() not in avail:
+                self.fmt_but[i].hide()
 
     def hide_info_block(self):
         self.seperator1.hide()
@@ -174,16 +185,6 @@ class GetTubeGui(GetTube):
             self.download_progressbar.set_fraction(0)
             self.download_progressbar.set_text(_('Ready'))
 
-    def info_block(self):
-        self.infolabel.set_text(self.info.format(self.title, self.id,
-            self.t))
-        self.mainframe.show_all()
-        self.progress_bar.hide()
-        total, avail = self.show()
-        for i in range(5):
-            if self.fmt_but[i].get_label() not in avail:
-                self.fmt_but[i].hide()
-
     def retrieve_hook(self, count, blockSize, totalSize):
         fraction = count * blockSize / float((totalSize / blockSize + 1) *
                 (blockSize))
@@ -193,20 +194,35 @@ class GetTubeGui(GetTube):
             gtk.main_iteration()
         return True
 
-    def download(self, button):
+    def download(self):
         self.parse_button.set_sensitive(False)
         self.download_button.set_sensitive(False)
         self.clear_button.set_sensitive(False)
         address = self.url
         if self.format != 'FLV':
             address += '&fmt=' + str(self.fmt[self.format][0])
-        name = self.outfile + '.' + self.fmt[self.format][1]
+        name = self.out_prefix + self.outfile + '.' + self.fmt[self.format][1]
         urllib.urlcleanup()
         urllib.urlretrieve(address, name, reporthook = self.retrieve_hook)
         self.download_progressbar.set_text(_('Finished'))
         self.parse_button.set_sensitive(True)
         self.download_button.set_sensitive(True)
         self.clear_button.set_sensitive(True)
+
+    def choose_file_dialog(self, button):
+        file_dialog = gtk.FileChooserDialog(_('Choose a location'),
+                self.window, gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
+                (gtk.STOCK_OK, gtk.RESPONSE_OK, gtk.STOCK_CANCEL,
+                    gtk.RESPONSE_CANCEL), None)
+        file_dialog.set_current_folder(self.out_prefix)
+        print self.out_prefix
+        response = file_dialog.run()
+        self.out_prefix = file_dialog.get_filename() + '/'
+        if response == gtk.RESPONSE_OK:
+            file_dialog.destroy()
+            self.download()
+        else:
+            file_dialog.destroy()
 
     def about_dialog(self, button):
         about = gtk.AboutDialog()

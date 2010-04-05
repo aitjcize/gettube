@@ -49,7 +49,7 @@ class GetTube:
             self.title = re.search('(?<=content=")[^"]*"', data).group(0)
             self.title = self.title.strip('"')
         except AttributeError:
-            self.__init__(addr)
+            GetTube.__init__(self, addr)
 
         # outfile
         self.outfile = self.title

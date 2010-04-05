@@ -42,27 +42,27 @@ msgstr "下載中..."
 msgid "Saved to `"
 msgstr "儲存至`"
 
-#: GetTubeGui.py:44
+#: GetTubeGui.py:45
 msgid "GetTube"
 msgstr "GetTube"
 
-#: GetTubeGui.py:45
+#: GetTubeGui.py:46
 msgid "Address:"
 msgstr "網址:"
 
-#: GetTubeGui.py:47
+#: GetTubeGui.py:48
 msgid "Parse Address"
 msgstr "分析網址"
 
-#: GetTubeGui.py:48
+#: GetTubeGui.py:49
 msgid "Clear"
 msgstr "清除"
 
-#: GetTubeGui.py:50
+#: GetTubeGui.py:51
 msgid "Video Information"
 msgstr "影片資訊"
 
-#: GetTubeGui.py:52
+#: GetTubeGui.py:53
 msgid ""
 "Video Title: {0}\n"
 "Video ID:    {1}\n"
@@ -72,27 +72,31 @@ msgstr ""
 "影片ID:   {1}\n"
 "影片金鑰: {2}"
 
-#: GetTubeGui.py:53
+#: GetTubeGui.py:54
 msgid "Available Formats"
 msgstr "可選格式"
 
-#: GetTubeGui.py:54
-msgid "Download"
-msgstr "下載"
+#: GetTubeGui.py:55
+msgid "Download to ..."
+msgstr "下載至..."
 
-#: GetTubeGui.py:56 GetTubeGui.py:129 GetTubeGui.py:175
+#: GetTubeGui.py:57 GetTubeGui.py:130 GetTubeGui.py:186
 msgid "Ready"
 msgstr "Ready"
 
-#: GetTubeGui.py:206
+#: GetTubeGui.py:207
 msgid "Finished"
 msgstr "完成"
 
-#: GetTubeGui.py:215
+#: GetTubeGui.py:213
+msgid "Choose a location"
+msgstr "選擇一個位置"
+
+#: GetTubeGui.py:231
 msgid "Download YouTube video easily."
 msgstr "輕易的下載YouTube影片"
 
-#: GetTubeGui.py:231
+#: GetTubeGui.py:247
 msgid "Copyright 2010 Wei-Ning Huang (AZ)"
 msgstr "版權所有 2010 黃偉寧(AZ)"
 

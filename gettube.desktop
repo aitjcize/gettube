@@ -1,0 +1,9 @@
+[Desktop Entry]
+Categories=Application;Network;
+Encoding=UTF-8
+Name=GetTube
+Exec=gettube -g
+Icon=/usr/share/pixmaps/gettube.png
+Type=Application
+Terminal=false
+Comment=Download YouTube Video Easily

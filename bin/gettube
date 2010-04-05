@@ -4,6 +4,8 @@
 # Copyright (C) 2010 -  Wei-Ning Huang (AZ) <aitjcize@gmail.com>
 # All Rights reserved.
 #
+# This Program is part of GetTube.
+#
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
@@ -36,15 +38,15 @@ Written by Aitjcize (Wei-Ning Huang).\n'
     .format(program_name, program_version))
 
 def interactive(address, format):
-    gt = getyoutube(address)
+    gt = GetTube(address)
     total, avail = gt.show()
 
     choice = 0
     try:
         while choice <= 0 or choice > total:
-            choice = int(raw_input('Choose a format: '))
+            choice = int(raw_input(_('Choose a format: ')))
     except (KeyboardInterrupt, ValueError):
-        print('\nAbort.')
+        print _('\nAbort.')
         sys.exit(1)
 
     gt.download(avail[choice -1])
@@ -54,7 +56,7 @@ def main():
     main fucntion
     '''
     # parse option
-    parser = OptionParser(usage = 'Usage: getyoutube [options] [urls]')
+    parser = OptionParser(usage = 'Usage: gettube [options] [urls]')
     parser.add_option('-v', '--version', action = 'store_true',
             dest = 'version', default = False,
             help = 'Show version information')
@@ -79,14 +81,14 @@ FORMAT can be FLV, 3GP, MP4, MP4-720p, MP4-1080p, default MP4.')
 
     # check
     if len(args) == 0:
-        print 'error: no address specified.'
+        print _('error: no address specified.')
         sys.exit(1)
 
     for address in args:
         if options.interactive:
             interactive(address, options.format)
         else:
-            gt = getyoutube(address)
+            gt = GetTube(address)
             gt.download(options.format)
 
 if __name__ == '__main__':
