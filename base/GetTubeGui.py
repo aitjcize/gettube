@@ -23,7 +23,7 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
-import os.path, sys, urllib, time, gettext
+import locale, os.path, sys, urllib, time, gettext
 from GetTubeBase import GetTubeBase
 from Misc import *
 _ = gettext.gettext
@@ -217,7 +217,9 @@ class GetTubeGui(GetTubeBase):
         address = self.url
         if self.format != 'FLV':
             address += '&fmt=' + str(self.fmt[self.format][0])
+        encoding = locale.getdefaultlocale()[1]
         name = self.out_prefix + self.outfile + '.' + self.fmt[self.format][1]
+        name = name.encode(encoding)
         urllib.urlcleanup()
         urllib.urlretrieve(address, name, reporthook = self.retrieve_hook)
         self.download_progressbar.set_text(_('Finished'))
@@ -232,8 +234,7 @@ class GetTubeGui(GetTubeBase):
                     gtk.RESPONSE_CANCEL), None)
         file_dialog.set_current_folder(self.out_prefix)
         response = file_dialog.run()
-        encoding = sys.stdout.encoding
-        self.out_prefix = file_dialog.get_filename().encode(encoding) + '/'
+        self.out_prefix = file_dialog.get_filename() + '/'
         if response == gtk.RESPONSE_OK:
             file_dialog.destroy()
             self.download()
