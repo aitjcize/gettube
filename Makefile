@@ -8,6 +8,7 @@ BIN_PATH = /usr/bin
 
 LIB_FILES = base/GetTubeBase.py\
 	    base/GetTubeGui.py\
+	    base/GetTubeConvert.py\
 	    base/Misc.py
 PYTHON_LIB_PATH = /usr/lib/python2.6
 

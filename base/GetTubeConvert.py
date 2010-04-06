@@ -1,8 +1,8 @@
-# Misc.py
+# GetTubeConvert.py
 #
 # Copyright (C) 2010 -  Wei-Ning Huang (AZ) <aitjcize@gmail.com>
 # All Rights reserved.
-# 
+#
 # This Program is part of GetTube.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -20,14 +20,32 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
-import gettext
+import subprocess, os
+from Misc import *
+_ = gettext.gettext
 
-# Program Information
-program_name = 'GetTube'
-program_name_lower_case = 'gettube'
-program_version = '0.6.0'
-program_logo = '/usr/share/pixmaps/gettube.png'
+def ToMp3(name):
+    cmdrp = [ ("'", "\\\'"), ('"', '\\\"'), ('(', '\\('), (')', '\\)') ]
+    rp_name = name
+    for x, y in cmdrp:
+        rp_name = rp_name.replace(x, y)
 
-# for gettext
-gettext.bindtextdomain(program_name_lower_case)
-gettext.textdomain(program_name_lower_case)
+    mp3_name = name.strip('mp4') + 'mp3'
+    rp_mp3_name = rp_name.strip('mp4') + 'mp3'
+
+    cmd = 'ffmpeg -i ' + rp_name + ' -ab 128k ' + rp_mp3_name
+
+    # Remove previous mp3 prevent ffmpeg from prompting about overwriting.
+    try:
+        os.remove(mp3_name)
+    except OSError:
+        pass
+
+    ret = subprocess.Popen(cmd, shell = True, stdout = subprocess.PIPE).wait()
+
+    if ret != 0:
+        print _('error: failed to convert {0} to MP3.').format(name)
+        return -1
+
+    os.remove(name)
+    return mp3_name

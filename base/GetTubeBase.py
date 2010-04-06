@@ -21,6 +21,7 @@
 #
 
 import sys, re, urllib
+from GetTubeConvert import ToMp3
 from Misc import *
 _ = gettext.gettext
 
@@ -60,7 +61,9 @@ class GetTubeBase:
                 '&t=' + self.t
         # fmt
         self.fmt = {'FLV': (0, 'flv'), '3GP': (17, '3gp'), 'MP4': (18, 'mp4'),
-                'MP4-720p': (22, 'mp4'), 'MP4-1080p': (37, 'mp4')}
+                'MP4-720p': (22, 'mp4'), 'MP4-1080p': (37, 'mp4'),
+                'MP3': (18, 'mp4')}
+        # disable HD if not found
         if data.find('22%2F2000000%') == -1:
             self.fmt['MP4-720p'] = (-1, 'mp4')
         if data.find('37%2F4000000%2F9%2F0%2F115') == -1:
@@ -107,4 +110,14 @@ class GetTubeBase:
         name = self.outfile + '.' + self.fmt[fmt][1]
         print _('Downloading...')
         urllib.urlretrieve(address, name, reporthook = self.retrieve_hook)
+
+        # Conversion
+        if fmt == 'MP3':
+            print _('Converting to MP3, this may take a while...')
+            name = ToMp3(name)
+            if name == -1:
+                print _('error: some error occured during the conversion, '
+                        'please try again.')
+                sys.exit(1)
+
         print _('Saved to `') + name + '\'.'

@@ -25,6 +25,7 @@ pygtk.require('2.0')
 import gtk
 import locale, os.path, sys, urllib, time, gettext
 from GetTubeBase import GetTubeBase
+from GetTubeConvert import ToMp3
 from Misc import *
 _ = gettext.gettext
 
@@ -63,6 +64,7 @@ class GetTubeGui(GetTubeBase):
         self.fmt_but.append(gtk.RadioButton(self.fmt_but[0], 'MP4-1080p'))
         self.fmt_but.append(gtk.RadioButton(self.fmt_but[0], 'MP4-720p'))
         self.fmt_but.append(gtk.RadioButton(self.fmt_but[0], 'FLV'))
+        self.fmt_but.append(gtk.RadioButton(self.fmt_but[0], 'MP3'))
         self.seperator1 = gtk.HSeparator()
         self.seperator2 = gtk.HSeparator()
         self.seperator3 = gtk.HSeparator()
@@ -85,7 +87,7 @@ class GetTubeGui(GetTubeBase):
         hbox.pack_start(self.clear_button, False, False, 5)
         hbox.pack_start(self.parse_button, False, False, 0)
         self.window.show_all()
-        # following widgets is hidden
+        # Following widgets is hidden
         vbox.pack_start(self.seperator1, True, True, 10)
         vbox.pack_start(self.infoframe, True, True, 0)
         hbox2 = gtk.HBox(False, 0)
@@ -96,7 +98,7 @@ class GetTubeGui(GetTubeBase):
         vbox.pack_start(self.formatframe, True, True, 0)
         hbox2 = gtk.HBox(True, 0)
         hbox2.set_border_width(5)
-        for i in range(5):
+        for i in range(len(self.fmt_but)):
             hbox2.pack_start(self.fmt_but[i], False, False, 0)
         self.formatframe.add(hbox2)
         vbox.pack_start(self.seperator3, True, True, 10)
@@ -106,19 +108,20 @@ class GetTubeGui(GetTubeBase):
         self.download_button.set_sensitive(False)
         vbox.pack_start(hbox2, True, True, 0)
 
-        # connect
+        # Connect
         self.fmt_but[0].connect('toggled', self.choose, '3GP')
         self.fmt_but[1].connect('toggled', self.choose, 'MP4')
         self.fmt_but[2].connect('toggled', self.choose, 'MP4-1080p')
         self.fmt_but[3].connect('toggled', self.choose, 'MP4-720p')
         self.fmt_but[4].connect('toggled', self.choose, 'FLV')
+        self.fmt_but[5].connect('toggled', self.choose, 'MP3')
         self.clear_button.connect('clicked', self.clear_address)
         self.download_button.connect('clicked', self.file_choose_dialog)
         self.window.connect('destroy', lambda wid: gtk.main_quit())
         self.parse_button.connect('clicked', self.parse)
         self.logo.connect('clicked', self.about_dialog)
 
-        # main
+        # Main
         self.window.show()
         self.progress_bar.hide()
         gtk.main()
@@ -170,20 +173,7 @@ class GetTubeGui(GetTubeBase):
         else:
             if address[0:31] != 'http://www.youtube.com/watch?v=' or\
                     GetTubeBase.__init__(self, address) == -1:
-                dialog = gtk.Dialog(_('Error'), self.window,
-                    gtk.DIALOG_NO_SEPARATOR, (gtk.STOCK_OK, gtk.RESPONSE_OK))
-                dialog.resize(260, 130)
-                label = gtk.Label(_('Invalid URL, please reenter.'))
-                icon = gtk.Image()
-                icon.set_from_stock(gtk.STOCK_DIALOG_ERROR,
-                        gtk.ICON_SIZE_DIALOG)
-                hbox = gtk.HBox(False, 0)
-                hbox.pack_start(icon, True, True, 0)
-                hbox.pack_start(label, True, True, 0)
-                dialog.vbox.pack_start(hbox, True, True, 0)
-                hbox.show_all()
-                dialog.run()
-                dialog.destroy()
+                self.error_dialog(_('Invalid URL, please reenter.'))
                 return
 
             self.clear_button.set_sensitive(False)
@@ -222,7 +212,22 @@ class GetTubeGui(GetTubeBase):
         name = name.encode(encoding)
         urllib.urlcleanup()
         urllib.urlretrieve(address, name, reporthook = self.retrieve_hook)
-        self.download_progressbar.set_text(_('Finished'))
+        self.download_progressbar.set_text(_('Done'))
+
+        # Conversion
+        if self.format == 'MP3':
+            self.download_progressbar.set_text(_('Converting to MP3, this '
+                'may take a while...'))
+            while gtk.events_pending():
+                gtk.main_iteration()
+            name = ToMp3(name)
+            if name == -1:
+                self.error_dialog(_('error: some error occured during the '
+                    'conversion, please try again.'))
+                self.download_progressbar.set_text(_('Failed'))
+            else:
+                self.download_progressbar.set_text(_('Done'))
+
         self.parse_button.set_sensitive(True)
         self.download_button.set_sensitive(True)
         self.clear_button.set_sensitive(True)
@@ -241,12 +246,28 @@ class GetTubeGui(GetTubeBase):
         else:
             file_dialog.destroy()
 
+    def error_dialog(self, message):
+        dialog = gtk.Dialog(_('Error'), self.window,
+            gtk.DIALOG_NO_SEPARATOR, (gtk.STOCK_OK, gtk.RESPONSE_OK))
+        dialog.resize(270, 120)
+        label = gtk.Label(message)
+        icon = gtk.Image()
+        icon.set_from_stock(gtk.STOCK_DIALOG_ERROR,
+                gtk.ICON_SIZE_DIALOG)
+        hbox = gtk.HBox(False, 0)
+        hbox.pack_start(icon, True, True, 0)
+        hbox.pack_start(label, True, True, 0)
+        dialog.vbox.pack_start(hbox, True, True, 0)
+        hbox.show_all()
+        dialog.run()
+        dialog.destroy()
+
     def about_dialog(self, button):
         about = gtk.AboutDialog()
         about.set_position(gtk.WIN_POS_CENTER)
         about.set_name(program_name)
         about.set_version(program_version)
-        about.set_comments(_('Download YouTube video easily.'))
+        about.set_comments(_('Download YouTube video Easily\n With formats:\nMP3, MP4, FLV and MP4-HD'))
         about.set_license('''
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
