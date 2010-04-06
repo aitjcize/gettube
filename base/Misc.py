@@ -25,7 +25,7 @@ import gettext
 # Program Information
 program_name = 'GetTube'
 program_name_lower_case = 'gettube'
-program_version = '0.5.1'
+program_version = '0.5.3'
 program_logo = '/usr/share/pixmaps/gettube.png'
 
 # for gettext

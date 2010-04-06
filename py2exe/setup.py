@@ -7,7 +7,7 @@ import cairo
 setup(
     name = "GetTube",
     description = "Download YouTube video easily",
-    version = "0.5.1",
+    version = "0.5.3",
     windows = [
         {
             "script": "GetTube.py",

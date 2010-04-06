@@ -265,6 +265,6 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
         about.set_website('http://github.com/Aitjcize/gettube')
         about.set_authors(['Wei-Ning Huang (AZ) <aitjcize@gmail.com>'])
         about.set_logo(gtk.gdk.pixbuf_new_from_file_at_size(program_logo,
-            128, 128))
+            64, 64))
         about.connect('response', lambda x, y, z: about.destroy(), True)
         about.show_all()
