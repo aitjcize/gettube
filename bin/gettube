@@ -23,7 +23,7 @@
 
 import sys, re, urllib
 from optparse import OptionParser
-from GetTube import GetTube
+from GetTubeBase import GetTubeBase
 from GetTubeGui import GetTubeGui
 from Misc import *
 _ = gettext.gettext
@@ -38,7 +38,7 @@ Written by Aitjcize (Wei-Ning Huang).\n'
     .format(program_name, program_version))
 
 def interactive(address, format):
-    gt = GetTube(address)
+    gt = GetTubeBase(address)
     total, avail = gt.show()
 
     choice = 0
@@ -88,7 +88,7 @@ FORMAT can be FLV, 3GP, MP4, MP4-720p, MP4-1080p, default MP4.')
         if options.interactive:
             interactive(address, options.format)
         else:
-            gt = GetTube(address)
+            gt = GetTubeBase(address)
             gt.download(options.format)
 
 if __name__ == '__main__':

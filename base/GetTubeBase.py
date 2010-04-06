@@ -1,4 +1,4 @@
-# GetTube.py
+# GetTubeBase.py
 #
 # Copyright (C) 2010 -  Wei-Ning Huang (AZ) <aitjcize@gmail.com>
 # All Rights reserved.
@@ -24,7 +24,7 @@ import sys, re, urllib
 from Misc import *
 _ = gettext.gettext
 
-class GetTube:
+class GetTubeBase:
     def __init__(self, addr):
         '''
         Initialize and parse video information
@@ -49,7 +49,7 @@ class GetTube:
             self.title = re.search('(?<=content=")[^"]*"', data).group(0)
             self.title = self.title.strip('"')
         except AttributeError:
-            GetTube.__init__(self, addr)
+            GetTubeBase.__init__(self, addr)
 
         # outfile
         self.outfile = self.title

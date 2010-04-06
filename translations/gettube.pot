@@ -14,31 +14,31 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: GetTube.py:74
+#: GetTubeBase.py:74
 msgid "Title:"
 msgstr "名稱:"
 
-#: GetTube.py:75
+#: GetTubeBase.py:75
 msgid "Video ID:"
 msgstr "影片ID:"
 
-#: GetTube.py:76
+#: GetTubeBase.py:76
 msgid "Video key:"
 msgstr "影片金鑰:"
 
-#: GetTube.py:78
+#: GetTubeBase.py:78
 msgid "Available format:"
 msgstr "可選格式:"
 
-#: GetTube.py:104
+#: GetTubeBase.py:104
 msgid "{0} is not available for this video!"
 msgstr "此影片無{0}格式!"
 
-#: GetTube.py:108
+#: GetTubeBase.py:108
 msgid "Downloading..."
 msgstr "下載中..."
 
-#: GetTube.py:110
+#: GetTubeBase.py:110
 msgid "Saved to `"
 msgstr "儲存至`"
 
@@ -80,31 +80,31 @@ msgstr "可選格式"
 msgid "Download to ..."
 msgstr "下載至..."
 
-#: GetTubeGui.py:58 GetTubeGui.py:131 GetTubeGui.py:204
+#: GetTubeGui.py:58 GetTubeGui.py:129 GetTubeGui.py:202
 msgid "Ready"
 msgstr "Ready"
 
-#: GetTubeGui.py:175
+#: GetTubeGui.py:173
 msgid "Error"
 msgstr "錯誤"
 
-#: GetTubeGui.py:178
+#: GetTubeGui.py:176
 msgid "Invalid URL, please reenter."
 msgstr "無效的網址, 請重新輸入."
 
-#: GetTubeGui.py:225
+#: GetTubeGui.py:223
 msgid "Finished"
 msgstr "完成"
 
-#: GetTubeGui.py:231
+#: GetTubeGui.py:229
 msgid "Choose a location"
 msgstr "選擇一個位置"
 
-#: GetTubeGui.py:249
+#: GetTubeGui.py:248
 msgid "Download YouTube video easily."
 msgstr "輕易的下載YouTube影片"
 
-#: GetTubeGui.py:265
+#: GetTubeGui.py:264
 msgid "Copyright 2010 Wei-Ning Huang (AZ)"
 msgstr "版權所有 2010 黃偉寧(AZ)"
 

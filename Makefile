@@ -6,7 +6,7 @@ MSGFMT = msgfmt
 TARGET = bin/gettube
 BIN_PATH = /usr/bin
 
-LIB_FILES = base/GetTube.py\
+LIB_FILES = base/GetTubeBase.py\
 	    base/GetTubeGui.py\
 	    base/Misc.py
 PYTHON_LIB_PATH = /usr/lib/python2.6

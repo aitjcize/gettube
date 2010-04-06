@@ -23,12 +23,12 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
-import os.path, urllib, time, gettext
-from GetTube import GetTube
+import os.path, sys, urllib, time, gettext
+from GetTubeBase import GetTubeBase
 from Misc import *
 _ = gettext.gettext
 
-class GetTubeGui(GetTube):
+class GetTubeGui(GetTubeBase):
     def __init__(self):
         gtk.window_set_default_icon_from_file(program_logo)
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
@@ -113,7 +113,7 @@ class GetTubeGui(GetTube):
         self.fmt_but[3].connect('toggled', self.choose, 'MP4-720p')
         self.fmt_but[4].connect('toggled', self.choose, 'FLV')
         self.clear_button.connect('clicked', self.clear_address)
-        self.download_button.connect('clicked', self.choose_file_dialog)
+        self.download_button.connect('clicked', self.file_choose_dialog)
         self.window.connect('destroy', lambda wid: gtk.main_quit())
         self.parse_button.connect('clicked', self.parse)
         self.logo.connect('clicked', self.about_dialog)
@@ -169,7 +169,7 @@ class GetTubeGui(GetTube):
             self.hide_info_block()
         else:
             if address[0:31] != 'http://www.youtube.com/watch?v=' or\
-                    GetTube.__init__(self, address) == -1:
+                    GetTubeBase.__init__(self, address) == -1:
                 dialog = gtk.Dialog(_('Error'), self.window,
                     gtk.DIALOG_NO_SEPARATOR, (gtk.STOCK_OK, gtk.RESPONSE_OK))
                 dialog.resize(260, 130)
@@ -225,14 +225,15 @@ class GetTubeGui(GetTube):
         self.download_button.set_sensitive(True)
         self.clear_button.set_sensitive(True)
 
-    def choose_file_dialog(self, button):
+    def file_choose_dialog(self, button):
         file_dialog = gtk.FileChooserDialog(_('Choose a location'),
                 self.window, gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
                 (gtk.STOCK_OK, gtk.RESPONSE_OK, gtk.STOCK_CANCEL,
                     gtk.RESPONSE_CANCEL), None)
         file_dialog.set_current_folder(self.out_prefix)
         response = file_dialog.run()
-        self.out_prefix = file_dialog.get_filename() + '/'
+        encoding = sys.stdout.encoding
+        self.out_prefix = file_dialog.get_filename().encode(encoding) + '/'
         if response == gtk.RESPONSE_OK:
             file_dialog.destroy()
             self.download()
