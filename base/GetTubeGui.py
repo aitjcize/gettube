@@ -41,7 +41,8 @@ class GetTubeGui(GetTube):
 
         # Widgets
         self.logo = gtk.Button()
-        self.logo.add(gtk.image_new_from_pixbuf(gtk.gdk.pixbuf_new_from_file_at_size(program_logo, 100, 100)))
+        self.logo.add(gtk.image_new_from_pixbuf(
+            gtk.gdk.pixbuf_new_from_file_at_size(program_logo, 100, 100)))
         self.mainframe = gtk.Frame(_('GetTube'))
         self.address_label = gtk.Label(_('Address:'))
         self.address_text = gtk.Entry()
@@ -120,8 +121,6 @@ class GetTubeGui(GetTube):
         # main
         self.window.show()
         self.progress_bar.hide()
-        self.parse_button.set_flags(gtk.CAN_DEFAULT)
-        self.parse_button.grab_default()
         gtk.main()
 
     def clear_address(self, button):
@@ -169,12 +168,29 @@ class GetTubeGui(GetTube):
         if address == '':
             self.hide_info_block()
         else:
-            GetTube.__init__(self, address)
+            if address[0:31] != 'http://www.youtube.com/watch?v=' or\
+                    GetTube.__init__(self, address) == -1:
+                dialog = gtk.Dialog(_('Error'), self.window,
+                    gtk.DIALOG_NO_SEPARATOR, (gtk.STOCK_OK, gtk.RESPONSE_OK))
+                dialog.resize(260, 130)
+                label = gtk.Label(_('Invalid URL, please reenter.'))
+                icon = gtk.Image()
+                icon.set_from_stock(gtk.STOCK_DIALOG_ERROR,
+                        gtk.ICON_SIZE_DIALOG)
+                hbox = gtk.HBox(False, 0)
+                hbox.pack_start(icon, True, True, 0)
+                hbox.pack_start(label, True, True, 0)
+                dialog.vbox.pack_start(hbox, True, True, 0)
+                hbox.show_all()
+                dialog.run()
+                dialog.destroy()
+                return
+
             self.clear_button.set_sensitive(False)
             self.address_text.hide()
             self.progress_bar.show()
             self.progress_bar.set_text(address if len(address) <= 42
-                    else address[:39] + '...')
+                    else address[:40] + '...')
             self.progress_bar_pulse()
             self.address_text.show()
             self.progress_bar.hide()
@@ -215,7 +231,6 @@ class GetTubeGui(GetTube):
                 (gtk.STOCK_OK, gtk.RESPONSE_OK, gtk.STOCK_CANCEL,
                     gtk.RESPONSE_CANCEL), None)
         file_dialog.set_current_folder(self.out_prefix)
-        print self.out_prefix
         response = file_dialog.run()
         self.out_prefix = file_dialog.get_filename() + '/'
         if response == gtk.RESPONSE_OK:

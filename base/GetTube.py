@@ -34,9 +34,9 @@ class GetTube:
         urllib.urlcleanup()
         try:
             data = str(urllib.urlopen(addr).read())
-        except ValueError as e:
+        except IOError as e:
             print 'error:', e
-            sys.exit(1)
+            return -1
 
         try:
             # address
