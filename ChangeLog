@@ -1,5 +1,7 @@
 2010-04-07  AZ Huang <aitjcize@gmail.com>
 
+  * ChangeLog: gettube: Add changlog to git repository using gitlog2changelog
+
   * base/GetTubeBase.py, base/GetTubeGui.py, bin/gettube: GetTube: Enhance URL
   validation and add retries. Implement URL retrieve and enable download
   abortion
