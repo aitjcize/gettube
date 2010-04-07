@@ -5,7 +5,7 @@
 ; the next line to enable compression. Startup times
 ; will be a little slower but the executable will be
 ; quite a bit smaller
-;SetCompressor lzma
+; SetCompressor lzma
 
 Name 'GetTube'
 OutFile ${exe}

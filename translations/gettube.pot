@@ -46,7 +46,7 @@ msgstr "此影片無{0}格式!"
 msgid "Downloading..."
 msgstr "下載中..."
 
-#: GetTubeBase.py:123 GetTubeGui.py:235
+#: GetTubeBase.py:123 GetTubeGui.py:229
 msgid "Converting to MP3, this may take a while..."
 msgstr "正在轉換成MP3中, 可能會花一段時間..."
 
@@ -58,7 +58,7 @@ msgstr "錯誤: 轉換過程中發生了錯誤, 請在嚐試一次."
 msgid "Saved to `"
 msgstr "儲存至`"
 
-#: GetTubeConvert.py:53
+#: GetTubeConvert.py:54
 msgid "error: failed to convert {0} to MP3."
 msgstr "錯誤: 無法轉換{0}為MP3."
 
@@ -104,43 +104,43 @@ msgstr "中止"
 msgid "Download to ..."
 msgstr "下載至..."
 
-#: GetTubeGui.py:60 GetTubeGui.py:136 GetTubeGui.py:201
+#: GetTubeGui.py:60 GetTubeGui.py:161 GetTubeGui.py:195
 msgid "Ready"
 msgstr "Ready"
 
-#: GetTubeGui.py:184
+#: GetTubeGui.py:176
 msgid "Invalid URL, please reenter."
 msgstr "無效的網址, 請重新輸入."
 
-#: GetTubeGui.py:228
+#: GetTubeGui.py:222
 msgid "Aborted"
 msgstr "已中止"
 
-#: GetTubeGui.py:230 GetTubeGui.py:249
+#: GetTubeGui.py:224 GetTubeGui.py:243
 msgid "Done"
 msgstr "完成"
 
-#: GetTubeGui.py:245
+#: GetTubeGui.py:239
 msgid "Some error occured during the conversion, please try again."
 msgstr "轉換的過成中發生了錯誤, 請重試一次."
 
-#: GetTubeGui.py:247
+#: GetTubeGui.py:241
 msgid "Failed"
 msgstr "失敗"
 
-#: GetTubeGui.py:258
+#: GetTubeGui.py:252
 msgid "Choose a location"
 msgstr "選擇一個位置"
 
-#: GetTubeGui.py:286
+#: GetTubeGui.py:280
 msgid "Download in progress"
 msgstr "下載尚未完成"
 
-#: GetTubeGui.py:287
+#: GetTubeGui.py:281
 msgid "Do you want to quit?"
 msgstr "要離開嗎?"
 
-#: GetTubeGui.py:301
+#: GetTubeGui.py:295
 msgid ""
 "Download YouTube video Easily\n"
 " With formats:\n"
@@ -149,7 +149,7 @@ msgstr ""
 "輕易的下載YouTube影片\n"
 "包括MP3, MP4, FLV 和 MP4-HD"
 
-#: GetTubeGui.py:317
+#: GetTubeGui.py:311
 msgid "Copyright 2010 Wei-Ning Huang (AZ)"
 msgstr "版權所有 2010 黃偉寧(AZ)"
 

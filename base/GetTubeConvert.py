@@ -45,7 +45,7 @@ def ToMp3(name, gui_running = False):
     sobj = subprocess.Popen(cmd, shell = True)
 
     # Prevent GUI from idle
-    while str(sobj.poll()) == 'None' and gui_running:
+    while gui_running and str(sobj.poll()) == 'None':
         time.sleep(1)
         while gtk.events_pending():
             gtk.main_iteration()

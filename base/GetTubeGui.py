@@ -34,7 +34,7 @@ class GetTubeGui(GetTubeBase):
         gtk.window_set_default_icon_from_file(program_logo)
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
         self.window.set_title(program_name)
-        self.window.resize(580, 180)
+        self.window.resize(620, 180)
         self.window.set_position(gtk.WIN_POS_CENTER_ALWAYS)
         self.window.set_border_width(10)
         self.format = 'MP4'
@@ -66,9 +66,6 @@ class GetTubeGui(GetTubeBase):
         self.fmt_but.append(gtk.RadioButton(self.fmt_but[0], 'MP4-720p'))
         self.fmt_but.append(gtk.RadioButton(self.fmt_but[0], 'FLV'))
         self.fmt_but.append(gtk.RadioButton(self.fmt_but[0], 'MP3'))
-        self.seperator1 = gtk.HSeparator()
-        self.seperator2 = gtk.HSeparator()
-        self.seperator3 = gtk.HSeparator()
 
         # Layout
         vbox = gtk.VBox(False, 0)
@@ -87,22 +84,23 @@ class GetTubeGui(GetTubeBase):
         hbox.pack_start(self.progress_bar, True, True, 5)
         hbox.pack_start(self.clear_button, False, False, 5)
         hbox.pack_start(self.parse_button, False, False, 0)
-        self.window.show_all()
-        # Following widgets is hidden
-        vbox.pack_start(self.seperator1, True, True, 10)
+        separator = gtk.HSeparator()
+        vbox.pack_start(separator, True, True, 10)
         vbox.pack_start(self.infoframe, True, True, 0)
         hbox2 = gtk.HBox(False, 0)
         hbox2.pack_start(self.infolabel, False, False, 0)
         hbox2.set_border_width(5)
         self.infoframe.add(hbox2)
-        vbox.pack_start(self.seperator2, True, True, 10)
+        separator = gtk.HSeparator()
+        vbox.pack_start(separator, True, True, 10)
         vbox.pack_start(self.formatframe, True, True, 0)
         hbox2 = gtk.HBox(True, 0)
         hbox2.set_border_width(5)
         for i in range(len(self.fmt_but)):
             hbox2.pack_start(self.fmt_but[i], False, False, 0)
         self.formatframe.add(hbox2)
-        vbox.pack_start(self.seperator3, True, True, 10)
+        separator = gtk.HSeparator()
+        vbox.pack_start(separator, True, True, 10)
         hbox2 = gtk.HBox(False, 0)
         hbox2.pack_start(self.download_progressbar, True, True, 0)
         hbox2.pack_start(self.abort_download_button, False, False, 5)
@@ -110,6 +108,7 @@ class GetTubeGui(GetTubeBase):
         self.abort_download_button.set_sensitive(False)
         self.download_button.set_sensitive(False)
         vbox.pack_start(hbox2, True, True, 0)
+        self.clear_info_block(None)
 
         # Connect
         self.fmt_but[0].connect('toggled', self.choose, '3GP')
@@ -118,7 +117,7 @@ class GetTubeGui(GetTubeBase):
         self.fmt_but[3].connect('toggled', self.choose, 'MP4-720p')
         self.fmt_but[4].connect('toggled', self.choose, 'FLV')
         self.fmt_but[5].connect('toggled', self.choose, 'MP3')
-        self.clear_button.connect('clicked', self.clear_address)
+        self.clear_button.connect('clicked', self.clear_info_block)
         self.abort_download_button.connect('clicked', self.abort)
         self.download_button.connect('clicked', self.file_choose_dialog)
         self.window.connect('delete_event', self.close_dialog)
@@ -126,15 +125,9 @@ class GetTubeGui(GetTubeBase):
         self.logo.connect('clicked', self.about_dialog)
 
         # Main
-        self.window.show()
+        self.window.show_all()
         self.progress_bar.hide()
         gtk.main()
-
-    def clear_address(self, button):
-        self.address_text.set_text('')
-        self.download_progressbar.set_fraction(0)
-        self.download_progressbar.set_text(_('Ready'))
-        self.hide_info_block()
 
     def choose(self, button, format):
         if button.get_active():
@@ -150,31 +143,30 @@ class GetTubeGui(GetTubeBase):
             while gtk.events_pending():
                 gtk.main_iteration()
 
-    def info_block(self):
+    def update_info_block(self):
         self.infolabel.set_text(self.info.format(self.title, self.id,
             self.t))
         self.mainframe.show_all()
         self.progress_bar.hide()
         total, avail = self.show()
-        for i in range(5):
+        for i in range(len(self.fmt_but)):
             if self.fmt_but[i].get_label() not in avail:
                 self.fmt_but[i].hide()
 
-    def hide_info_block(self):
-        self.seperator1.hide()
-        self.seperator2.hide()
-        self.seperator3.hide()
-        self.infoframe.hide()
-        self.formatframe.hide()
-        self.download_progressbar.hide()
-        self.abort_download_button.hide()
-        self.download_button.hide()
-        self.window.resize(580, 180)
+    def clear_info_block(self, button):
+        self.window.resize(620, 180)
+        self.infolabel.set_text(self.info.format('N/A', 'N/A', 'N/A'))
+        self.address_text.set_text('')
+        self.download_progressbar.set_fraction(0)
+        self.download_progressbar.set_text(_('Ready'))
+        self.formatframe.show_all()
+        for i in range(len(self.fmt_but)):
+            self.fmt_but[i].set_sensitive(False)
 
     def parse(self, button):
         address = self.address_text.get_text().strip(' ')
         if address == '':
-            self.hide_info_block()
+            self.clear_info_block(None)
         else:
             try:
                 if address[0:31] != 'http://www.youtube.com/watch?v=':
@@ -194,7 +186,9 @@ class GetTubeGui(GetTubeBase):
             self.address_text.show()
             self.progress_bar.hide()
             self.clear_button.set_sensitive(True)
-            self.info_block()
+            for i in range(len(self.fmt_but)):
+                self.fmt_but[i].set_sensitive(True)
+            self.update_info_block()
             self.download_progressbar.set_sensitive(True)
             self.download_button.set_sensitive(True)
             self.download_progressbar.set_fraction(0)
@@ -313,11 +307,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software Foundation,
 Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-        ''')
+''')
         about.set_copyright(_('Copyright 2010 Wei-Ning Huang (AZ)'))
         about.set_website('http://github.com/Aitjcize/gettube')
+        about.set_website_label('GetTube at GitHub')
         about.set_authors(['Wei-Ning Huang (AZ) <aitjcize@gmail.com>'])
+        about.set_translator_credits('Wei-Ning Huang (AZ) '
+                '<aitjcize@gmail.com>')
         about.set_logo(gtk.gdk.pixbuf_new_from_file_at_size(program_logo,
-            64, 64))
+            96, 96))
         about.connect('response', lambda x, y, z: about.destroy(), True)
         about.show_all()

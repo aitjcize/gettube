@@ -1,5 +1,7 @@
 2010-04-07  AZ Huang <aitjcize@gmail.com>
 
+  * ChangeLog, base/GetTubeConvert.py: Add $ to cmdrp
+
   * ChangeLog, base/GetTubeBase.py, base/GetTubeConvert.py, base/GetTubeGui.py,
   base/Misc.py, translations/gettube.pot: GetTubeGui.py: fix idle when
   converting mp3. Add close dialog.
