@@ -1,0 +1,45 @@
+2010-04-07  AZ Huang <aitjcize@gmail.com>
+
+  * base/GetTubeBase.py, base/GetTubeGui.py, bin/gettube: GetTube: Enhance URL
+  validation and add retries. Implement URL retrieve and enable download
+  abortion
+
+  * Makefile, base/GetTubeBase.py, base/GetTubeConvert.py, base/GetTubeGui.py,
+  base/Misc.py, translations/gettube.pot: gettube: add MP3 format support
+
+2010-04-06  AZ Huang <aitjcize@gmail.com>
+
+  * base/GetTubeGui.py, bin/gettube: gettube: fix encoding again...
+
+  * base/GetTubeGui.py, base/Misc.py, py2exe/setup.py: gettube: bump version to
+  0.5.3
+
+  * Makefile, base/GetTube.py, base/GetTubeBase.py, base/GetTubeGui.py,
+  bin/gettube, images/gettube.png, py2exe/gettube.ico, py2exe/setup.nsi,
+  py2exe/setup.py, translations/gettube.pot: gettube: fix filenmae encoding,
+  add py2exe files
+
+  * base/GetTube.py, base/GetTubeGui.py, base/Misc.py,
+  translations/gettube.pot: gettub: add url validation
+
+2010-04-05  AZ Huang <aitjcize@gmail.com>
+
+  * base/GetTubeGui.py: gettube: fix some minor bugs
+
+  * Makefile, README, base/GetTube.py, base/GetTubeGui.py, bin/gettube,
+  gettube.desktop, image/gettube-orig.png, image/gettube.png,
+  images/gettube-orig.png, images/gettube.png, py-compile,
+  translations/gettube.pot: gettube: add file dialog
+
+  * base/GetTube.py, base/GetTubeGui.py, base/Misc.py, bin/gettube,
+  bin/gettube.png, gettube.png, getyoutube.jpg, image/gettube-orig.png,
+  image/gettube.png, translations/gettube.pot: gettube: seperate classes, add
+  translation
+
+  * bin/gettube, bin/gettube.png, bin/getyoutube, gettube.png, getyoutube.jpg:
+  gettube: change name to gettube Add GUI bump version to 0.5.0
+
+2010-04-04  AZ Huang <aitjcize@gmail.com>
+
+  * bin/getyoutube: getyoutube: change re due to the change of format of
+  Youtube
