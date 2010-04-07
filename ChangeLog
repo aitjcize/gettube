@@ -1,5 +1,7 @@
 2010-04-07  AZ Huang <aitjcize@gmail.com>
 
+  * AUTHORS, COPYING, ChangeLog, README: Modified README, add AUTHORS COPYING
+
   * ChangeLog: gettube: Add changlog to git repository using gitlog2changelog
 
   * base/GetTubeBase.py, base/GetTubeGui.py, bin/gettube: GetTube: Enhance URL

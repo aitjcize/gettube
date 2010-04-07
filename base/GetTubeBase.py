@@ -36,8 +36,7 @@ class GetTubeBase:
         try:
             data = str(urllib2.urlopen(addr).read())
         except IOError as e:
-            print 'error:', e
-            return -1
+            raise e
         
         # abort_download flag
         self.abort_download = False

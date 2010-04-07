@@ -121,7 +121,7 @@ class GetTubeGui(GetTubeBase):
         self.clear_button.connect('clicked', self.clear_address)
         self.abort_download_button.connect('clicked', self.abort)
         self.download_button.connect('clicked', self.file_choose_dialog)
-        self.window.connect('destroy', lambda wid: gtk.main_quit())
+        self.window.connect('delete_event', self.close_dialog)
         self.parse_button.connect('clicked', self.parse)
         self.logo.connect('clicked', self.about_dialog)
 
@@ -143,7 +143,7 @@ class GetTubeGui(GetTubeBase):
     def progress_bar_pulse(self):
         count = 0
         self.progress_bar.set_pulse_step(0.1)
-        while count < 0:
+        while count < 10:
             time.sleep(0.1)
             self.progress_bar.pulse()
             count += 1
@@ -167,6 +167,7 @@ class GetTubeGui(GetTubeBase):
         self.infoframe.hide()
         self.formatframe.hide()
         self.download_progressbar.hide()
+        self.abort_download_button.hide()
         self.download_button.hide()
         self.window.resize(580, 180)
 
@@ -238,10 +239,10 @@ class GetTubeGui(GetTubeBase):
                 while gtk.events_pending():
                     gtk.main_iteration()
 
-                name = ToMp3(name)
+                name = ToMp3(name, True)
 
                 if name == -1:
-                    self.error_dialog(_('error: some error occured during the '
+                    self.error_dialog(_('Some error occured during the '
                         'conversion, please try again.'))
                     self.download_progressbar.set_text(_('Failed'))
                 else:
@@ -272,6 +273,25 @@ class GetTubeGui(GetTubeBase):
                 gtk.BUTTONS_OK, '\n' + message)
         dialog.run()
         dialog.destroy()
+
+    def close_dialog(self, widget, event):
+        # Not downloading
+        if self.download_progressbar.get_fraction() == 0 or\
+                self.download_progressbar.get_fraction() == 1:
+            gtk.main_quit()
+            return False
+
+        dialog = gtk.MessageDialog(self.window, gtk.DIALOG_MODAL,
+                gtk.MESSAGE_WARNING, gtk.BUTTONS_YES_NO,
+                _('Download in progress'))
+        dialog.format_secondary_text(_('Do you want to quit?'))
+        ret = dialog.run()
+        dialog.destroy()
+        if ret == gtk.RESPONSE_YES:
+            self.abort_download = True
+            gtk.main_quit()
+            return False
+        return True
 
     def about_dialog(self, button):
         about = gtk.AboutDialog()

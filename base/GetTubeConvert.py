@@ -20,11 +20,11 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
-import subprocess, os
+import subprocess, os, time, gtk
 from Misc import *
 _ = gettext.gettext
 
-def ToMp3(name):
+def ToMp3(name, gui_running = False):
     cmdrp = [ ("'", "\\\'"), ('"', '\\\"'), ('(', '\\('), (')', '\\)') ]
     rp_name = name
     for x, y in cmdrp:
@@ -41,9 +41,15 @@ def ToMp3(name):
     except OSError:
         pass
 
-    ret = subprocess.Popen(cmd, shell = True, stdout = subprocess.PIPE).wait()
+    sobj = subprocess.Popen(cmd, shell = True)
 
-    if ret != 0:
+    # Prevent GUI from idle
+    while str(sobj.poll()) == 'None' and gui_running:
+        time.sleep(1)
+        while gtk.events_pending():
+            gtk.main_iteration()
+
+    if sobj.poll() != 0:
         print _('error: failed to convert {0} to MP3.').format(name)
         return -1
 
