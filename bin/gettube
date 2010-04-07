@@ -38,7 +38,12 @@ Written by Aitjcize (Wei-Ning Huang).\n'
     .format(program_name, program_version))
 
 def interactive(address, format):
-    gt = GetTubeBase(address)
+    try:
+        gt = GetTubeBase(address)
+    except Exception as e:
+        print e
+        return
+
     total, avail = gt.show()
 
     choice = 0
@@ -81,14 +86,19 @@ FORMAT can be FLV, 3GP, MP4, MP4-720p, MP4-1080p, default MP4.')
 
     # check
     if len(args) == 0:
-        print _('error: no address specified.')
+        print _('error: no URL specified.')
         sys.exit(1)
 
     for address in args:
         if options.interactive:
             interactive(address, options.format)
         else:
-            gt = GetTubeBase(address)
+            try:
+                gt = GetTubeBase(address)
+            except Exception as e:
+                print e
+                continue
+
             gt.download(options.format)
 
 if __name__ == '__main__':

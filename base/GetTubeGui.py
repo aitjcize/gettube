@@ -23,7 +23,7 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
-import locale, os.path, sys, urllib, time, gettext
+import locale, os.path, sys, time, gettext
 from GetTubeBase import GetTubeBase
 from GetTubeConvert import ToMp3
 from Misc import *
@@ -54,6 +54,7 @@ class GetTubeGui(GetTubeBase):
         self.infolabel = gtk.Label()
         self.info = _('Video Title: {0}\nVideo ID:    {1}\nVideo Key:   {2}')
         self.formatframe = gtk.Frame(_('Available Formats'))
+        self.abort_download_button = gtk.Button(_('Abort'))
         self.download_button = gtk.Button(_('Download to ...'))
         self.download_progressbar = gtk.ProgressBar()
         self.download_progressbar.set_text(_('Ready'))
@@ -104,7 +105,9 @@ class GetTubeGui(GetTubeBase):
         vbox.pack_start(self.seperator3, True, True, 10)
         hbox2 = gtk.HBox(False, 0)
         hbox2.pack_start(self.download_progressbar, True, True, 0)
+        hbox2.pack_start(self.abort_download_button, False, False, 5)
         hbox2.pack_start(self.download_button, False, False, 5)
+        self.abort_download_button.set_sensitive(False)
         self.download_button.set_sensitive(False)
         vbox.pack_start(hbox2, True, True, 0)
 
@@ -116,6 +119,7 @@ class GetTubeGui(GetTubeBase):
         self.fmt_but[4].connect('toggled', self.choose, 'FLV')
         self.fmt_but[5].connect('toggled', self.choose, 'MP3')
         self.clear_button.connect('clicked', self.clear_address)
+        self.abort_download_button.connect('clicked', self.abort)
         self.download_button.connect('clicked', self.file_choose_dialog)
         self.window.connect('destroy', lambda wid: gtk.main_quit())
         self.parse_button.connect('clicked', self.parse)
@@ -171,9 +175,13 @@ class GetTubeGui(GetTubeBase):
         if address == '':
             self.hide_info_block()
         else:
-            if address[0:31] != 'http://www.youtube.com/watch?v=' or\
-                    GetTubeBase.__init__(self, address) == -1:
+            try:
+                if address[0:31] != 'http://www.youtube.com/watch?v=':
+                    raise Exception()
+                GetTubeBase.__init__(self, address)
+            except Exception:
                 self.error_dialog(_('Invalid URL, please reenter.'))
+                self.retries = 5
                 return
 
             self.clear_button.set_sensitive(False)
@@ -198,39 +206,52 @@ class GetTubeGui(GetTubeBase):
         self.download_progressbar.set_fraction(fraction)
         while gtk.events_pending():
             gtk.main_iteration()
-        return True
 
     def download(self):
         self.parse_button.set_sensitive(False)
+        self.abort_download_button.set_sensitive(True)
         self.download_button.set_sensitive(False)
         self.clear_button.set_sensitive(False)
+        self.formatframe.set_sensitive(False)
         address = self.url
         if self.format != 'FLV':
             address += '&fmt=' + str(self.fmt[self.format][0])
         encoding = locale.getdefaultlocale()[1]
         name = self.out_prefix + self.outfile + '.' + self.fmt[self.format][1]
         name = name.encode(encoding)
-        urllib.urlcleanup()
-        urllib.urlretrieve(address, name, reporthook = self.retrieve_hook)
-        self.download_progressbar.set_text(_('Done'))
+        self.retrieve(address, name, self.retrieve_hook)
 
-        # Conversion
-        if self.format == 'MP3':
-            self.download_progressbar.set_text(_('Converting to MP3, this '
-                'may take a while...'))
-            while gtk.events_pending():
-                gtk.main_iteration()
-            name = ToMp3(name)
-            if name == -1:
-                self.error_dialog(_('error: some error occured during the '
-                    'conversion, please try again.'))
-                self.download_progressbar.set_text(_('Failed'))
-            else:
-                self.download_progressbar.set_text(_('Done'))
+        if self.abort_download:
+            self.abort_download = False
+            self.download_progressbar.set_fraction(1)
+            self.download_progressbar.set_text(_('Aborted'))
+        else:
+            self.download_progressbar.set_text(_('Done'))
+            self.abort_download_button.set_sensitive(False)
+
+            # Conversion
+            if self.format == 'MP3':
+                self.download_progressbar.set_text(_('Converting to MP3, this '
+                    'may take a while...'))
+
+                # update GUI
+                while gtk.events_pending():
+                    gtk.main_iteration()
+
+                name = ToMp3(name)
+
+                if name == -1:
+                    self.error_dialog(_('error: some error occured during the '
+                        'conversion, please try again.'))
+                    self.download_progressbar.set_text(_('Failed'))
+                else:
+                    self.download_progressbar.set_text(_('Done'))
 
         self.parse_button.set_sensitive(True)
+        self.abort_download_button.set_sensitive(False)
         self.download_button.set_sensitive(True)
         self.clear_button.set_sensitive(True)
+        self.formatframe.set_sensitive(True)
 
     def file_choose_dialog(self, button):
         file_dialog = gtk.FileChooserDialog(_('Choose a location'),
@@ -247,18 +268,8 @@ class GetTubeGui(GetTubeBase):
             file_dialog.destroy()
 
     def error_dialog(self, message):
-        dialog = gtk.Dialog(_('Error'), self.window,
-            gtk.DIALOG_NO_SEPARATOR, (gtk.STOCK_OK, gtk.RESPONSE_OK))
-        dialog.resize(270, 120)
-        label = gtk.Label(message)
-        icon = gtk.Image()
-        icon.set_from_stock(gtk.STOCK_DIALOG_ERROR,
-                gtk.ICON_SIZE_DIALOG)
-        hbox = gtk.HBox(False, 0)
-        hbox.pack_start(icon, True, True, 0)
-        hbox.pack_start(label, True, True, 0)
-        dialog.vbox.pack_start(hbox, True, True, 0)
-        hbox.show_all()
+        dialog = gtk.MessageDialog(self.window, 0, gtk.MESSAGE_ERROR,
+                gtk.BUTTONS_OK, '\n' + message)
         dialog.run()
         dialog.destroy()
 

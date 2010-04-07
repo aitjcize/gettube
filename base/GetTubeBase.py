@@ -20,24 +20,27 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
-import sys, re, urllib
+import os, sys, re, urllib2
 from GetTubeConvert import ToMp3
 from Misc import *
 _ = gettext.gettext
 
 class GetTubeBase:
+    retries = 5
     def __init__(self, addr):
         '''
         Initialize and parse video information
         '''
         # Title replacement strings
         xmlrp = [ (' ', '_'), ('&quot;', '"'), ('&lt;', '<'), ('&gt;', '>') ]
-        urllib.urlcleanup()
         try:
-            data = str(urllib.urlopen(addr).read())
+            data = str(urllib2.urlopen(addr).read())
         except IOError as e:
             print 'error:', e
             return -1
+        
+        # abort_download flag
+        self.abort_download = False
 
         try:
             # address
@@ -50,7 +53,12 @@ class GetTubeBase:
             self.title = re.search('(?<=content=")[^"]*"', data).group(0)
             self.title = self.title.strip('"')
         except AttributeError:
-            GetTubeBase.__init__(self, addr)
+            if self.retries > 0:
+                print _('error: some error occured during parsing URL, '
+                        'retris = '), self.retries
+                self.retries -= 1
+                GetTubeBase.__init__(self, addr)
+            raise Exception(_('error: invalid URL.'))
 
         # outfile
         self.outfile = self.title
@@ -106,10 +114,10 @@ class GetTubeBase:
         if fmt not in self.fmt or self.fmt[fmt][0] == -1:
             print(_('{0} is not available for this video!').format(fmt))
             sys.exit(1)
-        address = self.url + '&fmt=' + str(self.fmt[fmt][0])
+        url = self.url + '&fmt=' + str(self.fmt[fmt][0])
         name = self.outfile + '.' + self.fmt[fmt][1]
         print _('Downloading...')
-        urllib.urlretrieve(address, name, reporthook = self.retrieve_hook)
+        self.retrieve(url, name, self.retrieve_hook)
 
         # Conversion
         if fmt == 'MP3':
@@ -121,3 +129,29 @@ class GetTubeBase:
                 sys.exit(1)
 
         print _('Saved to `') + name + '\'.'
+
+    def abort(self, button):
+        self.abort_download = True
+
+    def retrieve(self, url, name, hook):
+        count = 0
+        blockSize = 4096
+        f = open(name, 'w')
+
+        urlobj = urllib2.urlopen(url)
+        totalSize = int(urlobj.info()['content-length'])
+
+        while not self.abort_download:
+            data = urlobj.read(blockSize)
+            count += 1
+            if not data:
+                break
+            f.write(data)
+            hook(count, blockSize, totalSize)
+
+        f.close()
+        if self.abort_download:
+            try:
+                os.remove(name)
+            except OSError:
+                pass
