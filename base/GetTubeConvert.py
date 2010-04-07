@@ -25,7 +25,8 @@ from Misc import *
 _ = gettext.gettext
 
 def ToMp3(name, gui_running = False):
-    cmdrp = [ ("'", "\\\'"), ('"', '\\\"'), ('(', '\\('), (')', '\\)') ]
+    cmdrp = [ ("'", "\\\'"), ('"', '\\\"'), ('(', '\\('), (')', '\\)'),
+              ('$', '\\$') ]
     rp_name = name
     for x, y in cmdrp:
         rp_name = rp_name.replace(x, y)

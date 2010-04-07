@@ -1,5 +1,9 @@
 2010-04-07  AZ Huang <aitjcize@gmail.com>
 
+  * ChangeLog, base/GetTubeBase.py, base/GetTubeConvert.py, base/GetTubeGui.py,
+  base/Misc.py, translations/gettube.pot: GetTubeGui.py: fix idle when
+  converting mp3. Add close dialog.
+
   * AUTHORS, COPYING, ChangeLog, README: Modified README, add AUTHORS COPYING
 
   * ChangeLog: gettube: Add changlog to git repository using gitlog2changelog
