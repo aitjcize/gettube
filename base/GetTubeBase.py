@@ -101,7 +101,7 @@ class GetTubeBase:
                 print '{0}. {1}'.format(count + 1, key)
                 avail.append(key)
                 count += 1
-        print('-' * 79)
+        print '-' * 79
         return count, avail
 
     def retrieve_hook(self, count, blockSize, totalSize):
@@ -122,7 +122,7 @@ class GetTubeBase:
         Start download
         '''
         if fmt not in self.fmt or self.fmt[fmt][0] == -1:
-            print(_('{0} is not available for this video!').format(fmt))
+            print _('{0} is not available for this video!').format(fmt)
             sys.exit(1)
         url = self.url + '&fmt=' + str(self.fmt[fmt][0])
         name = self.outfile + '.' + self.fmt[fmt][1]
@@ -157,13 +157,19 @@ class GetTubeBase:
         urlobj = urllib2.urlopen(url)
         totalSize = int(urlobj.info()['content-length'])
 
-        while not self.abort_download:
-            data = urlobj.read(blockSize)
-            count += 1
-            if not data:
-                break
-            f.write(data)
-            hook(count, blockSize, totalSize)
+        try:
+            while not self.abort_download:
+                data = urlobj.read(blockSize)
+                count += 1
+                if not data:
+                    break
+                f.write(data)
+                hook(count, blockSize, totalSize)
+        except KeyboardInterrupt:
+            f.close()
+            os.remove(name)
+            print _('\nAborted.')
+            sys.exit(1)
 
         f.close()
         if self.abort_download:

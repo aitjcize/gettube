@@ -52,13 +52,25 @@ msgstr "正在轉換成MP3中, 可能會花一段時間..."
 
 #: GetTubeBase.py:137
 msgid "error: some error occured during the conversion, please try again."
-msgstr "錯誤: 轉換過程中發生了錯誤, 請在嚐試一次."
+msgstr "錯誤: 轉換過程中發生了錯誤, 請再嘗試一次."
 
 #: GetTubeBase.py:141
 msgid "Saved to `"
 msgstr "儲存至`"
 
-#: GetTubeConvert.py:52
+#: GetTubeBase.py:171
+msgid ""
+"\n"
+"Aborted."
+msgstr ""
+"\n"
+"已中止."
+
+#: GetTubeConvert.py:53
+msgid "Aborted."
+msgstr "已中止."
+
+#: GetTubeConvert.py:57
 msgid "error: failed to convert {0} to MP3."
 msgstr "錯誤: 無法轉換{0}為MP3."
 

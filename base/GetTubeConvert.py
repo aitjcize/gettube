@@ -40,13 +40,18 @@ def ToMp3(name, gui_running = False):
     except OSError:
         pass
 
-    sobj = subprocess.Popen(cmd)
+    sobj = subprocess.Popen(cmd, stderr = subprocess.PIPE)
 
-    # Prevent GUI from idle
-    while gui_running and str(sobj.poll()) == 'None':
-        time.sleep(1)
-        while gtk.events_pending():
-            gtk.main_iteration()
+    try:
+        while str(sobj.poll()) == 'None':
+            time.sleep(1)
+            # Prevent GUI from idling
+            while gui_running and gtk.events_pending():
+                gtk.main_iteration()
+    except KeyboardInterrupt:
+        os.remove(mp3_name)
+        print _('Aborted.')
+        return -1
 
     if sobj.poll() != 0:
         print _('error: failed to convert {0} to MP3.').format(name)
