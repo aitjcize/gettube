@@ -1,3 +1,5 @@
+#-*- coding: utf-8 -*-
+#
 # GetTubeBase.py
 #
 # Copyright (C) 2010 -  Wei-Ning Huang (AZ) <aitjcize@gmail.com>
@@ -20,12 +22,13 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
-import os, sys, re, urllib2
+import os, sys, re, urllib2, platform
 from GetTubeConvert import ToMp3
 from Misc import *
 _ = gettext.gettext
 
 class GetTubeBase:
+    # static variable for counting retries
     retries = 5
     def __init__(self, addr):
         '''
@@ -33,6 +36,11 @@ class GetTubeBase:
         '''
         # Title replacement strings
         xmlrp = [ (' ', '_'), ('&quot;', '"'), ('&lt;', '<'), ('&gt;', '>') ]
+
+        # Windows does not allow `"' to appear in filename
+        if platform.system() == 'Windows':
+            xmlrp[1] = ('&quot;', '\'')
+
         try:
             data = str(urllib2.urlopen(addr).read())
         except IOError as e:
@@ -78,7 +86,7 @@ class GetTubeBase:
 
     def show(self):
         '''
-        Show video information
+        Show and return video information
         '''
         print '-' * 79
         print _('Title:'), self.title
@@ -97,6 +105,9 @@ class GetTubeBase:
         return count, avail
 
     def retrieve_hook(self, count, blockSize, totalSize):
+        '''
+        Retrieve for drawing progress bar
+        '''
         percentage = count * blockSize * 100 / ((totalSize / blockSize + 1) *
                 (blockSize))
         sys.stdout.write('\r' + str(percentage) + '% [')
@@ -130,12 +141,18 @@ class GetTubeBase:
         print _('Saved to `') + name + '\'.'
 
     def abort(self, button):
+        '''
+        Set abort flag
+        '''
         self.abort_download = True
 
     def retrieve(self, url, name, hook):
+        '''
+        retrieve implement with urllib2
+        '''
         count = 0
         blockSize = 4096
-        f = open(name, 'w')
+        f = open(name, 'wb')
 
         urlobj = urllib2.urlopen(url)
         totalSize = int(urlobj.info()['content-length'])

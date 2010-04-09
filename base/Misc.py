@@ -1,3 +1,5 @@
+#-*- coding: utf-8 -*-
+#
 # Misc.py
 #
 # Copyright (C) 2010 -  Wei-Ning Huang (AZ) <aitjcize@gmail.com>
@@ -20,13 +22,16 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
-import gettext
+import gettext, platform
 
 # Program Information
 program_name = 'GetTube'
 program_name_lower_case = 'gettube'
 program_version = '0.6.5'
 program_logo = '/usr/share/pixmaps/gettube.png'
+
+if platform.system() == 'Windows':
+    program_logo = 'gettube.png'
 
 # for gettext
 gettext.bindtextdomain(program_name_lower_case)

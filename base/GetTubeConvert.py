@@ -1,3 +1,5 @@
+#-*- coding: utf-8 -*-
+#
 # GetTubeConvert.py
 #
 # Copyright (C) 2010 -  Wei-Ning Huang (AZ) <aitjcize@gmail.com>
@@ -25,16 +27,12 @@ from Misc import *
 _ = gettext.gettext
 
 def ToMp3(name, gui_running = False):
-    cmdrp = [ ("'", "\\\'"), ('"', '\\\"'), ('(', '\\('), (')', '\\)'),
-              ('$', '\\$') ]
-    rp_name = name
-    for x, y in cmdrp:
-        rp_name = rp_name.replace(x, y)
-
+    '''
+    Convert MP4 to MP3
+    '''
     mp3_name = name.strip('mp4') + 'mp3'
-    rp_mp3_name = rp_name.strip('mp4') + 'mp3'
 
-    cmd = 'ffmpeg -i ' + rp_name + ' -ab 128k ' + rp_mp3_name
+    cmd = ['ffmpeg', '-i', name, '-ab', '128k', mp3_name]
 
     # Remove previous mp3 prevent ffmpeg from prompting about overwriting.
     try:
@@ -42,7 +40,7 @@ def ToMp3(name, gui_running = False):
     except OSError:
         pass
 
-    sobj = subprocess.Popen(cmd, shell = True)
+    sobj = subprocess.Popen(cmd)
 
     # Prevent GUI from idle
     while gui_running and str(sobj.poll()) == 'None':

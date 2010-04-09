@@ -1,3 +1,5 @@
+#-*- coding: utf-8 -*-
+#
 # GetTubeGui.py
 #
 # Copyright (C) 2010 -  Wei-Ning Huang (AZ) <aitjcize@gmail.com>
@@ -130,10 +132,16 @@ class GetTubeGui(GetTubeBase):
         gtk.main()
 
     def choose(self, button, format):
+        '''
+        Callback for selecting format
+        '''
         if button.get_active():
             self.format = format
 
     def progress_bar_pulse(self):
+        '''
+        Progress bar pulse
+        '''
         count = 0
         self.progress_bar.set_pulse_step(0.1)
         while count < 10:
@@ -144,6 +152,9 @@ class GetTubeGui(GetTubeBase):
                 gtk.main_iteration()
 
     def update_info_block(self):
+        '''
+        Update the information block including infoframe, formatframe
+        '''
         self.infolabel.set_text(self.info.format(self.title, self.id,
             self.t))
         self.mainframe.show_all()
@@ -154,6 +165,9 @@ class GetTubeGui(GetTubeBase):
                 self.fmt_but[i].hide()
 
     def clear_info_block(self, button):
+        '''
+        Clear the information block including infoframe, formatframe
+        '''
         self.window.resize(620, 180)
         self.infolabel.set_text(self.info.format('N/A', 'N/A', 'N/A'))
         self.address_text.set_text('')
@@ -164,6 +178,9 @@ class GetTubeGui(GetTubeBase):
             self.fmt_but[i].set_sensitive(False)
 
     def parse(self, button):
+        '''
+        Parse URL by passing address to the base class constructor
+        '''
         address = self.address_text.get_text().strip(' ')
         if address == '':
             self.clear_info_block(None)
@@ -195,6 +212,10 @@ class GetTubeGui(GetTubeBase):
             self.download_progressbar.set_text(_('Ready'))
 
     def retrieve_hook(self, count, blockSize, totalSize):
+        '''
+        Overriding the base class retrieve_hook for displaying graphical
+        progress bar
+        '''
         fraction = count * blockSize / float((totalSize / blockSize + 1) *
                 (blockSize))
         self.download_progressbar.set_text(str(int(fraction * 100)) + '%')
@@ -203,6 +224,9 @@ class GetTubeGui(GetTubeBase):
             gtk.main_iteration()
 
     def download(self):
+        '''
+        Overriding the base class download to provide graphical interaction.
+        '''
         self.parse_button.set_sensitive(False)
         self.abort_download_button.set_sensitive(True)
         self.download_button.set_sensitive(False)
@@ -249,6 +273,9 @@ class GetTubeGui(GetTubeBase):
         self.formatframe.set_sensitive(True)
 
     def file_choose_dialog(self, button):
+        '''
+        file choose dialog
+        '''
         file_dialog = gtk.FileChooserDialog(_('Choose a location'),
                 self.window, gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
                 (gtk.STOCK_OK, gtk.RESPONSE_OK, gtk.STOCK_CANCEL,
@@ -263,13 +290,20 @@ class GetTubeGui(GetTubeBase):
             file_dialog.destroy()
 
     def error_dialog(self, message):
+        '''
+        Error dialog for convenience
+        '''
         dialog = gtk.MessageDialog(self.window, 0, gtk.MESSAGE_ERROR,
                 gtk.BUTTONS_OK, '\n' + message)
         dialog.run()
         dialog.destroy()
 
     def close_dialog(self, widget, event):
-        # Not downloading
+        '''
+        Callback for 'delete_event' to prevent from interrupting download
+        process
+        '''
+        # if not downloading, quit quietly
         if self.download_progressbar.get_fraction() == 0 or\
                 self.download_progressbar.get_fraction() == 1:
             gtk.main_quit()
@@ -288,6 +322,9 @@ class GetTubeGui(GetTubeBase):
         return True
 
     def about_dialog(self, button):
+        '''
+        About this program
+        '''
         about = gtk.AboutDialog()
         about.set_position(gtk.WIN_POS_CENTER)
         about.set_name(program_name)
