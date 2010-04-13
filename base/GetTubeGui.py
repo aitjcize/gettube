@@ -186,8 +186,6 @@ class GetTubeGui(GetTubeBase):
             self.clear_info_block(None)
         else:
             try:
-                if address[0:31] != 'http://www.youtube.com/watch?v=':
-                    raise Exception()
                 GetTubeBase.__init__(self, address)
             except Exception:
                 self.error_dialog(_('Invalid URL, please reenter.'))

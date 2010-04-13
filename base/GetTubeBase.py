@@ -41,10 +41,11 @@ class GetTubeBase:
         if platform.system() == 'Windows':
             xmlrp[1] = ('&quot;', '\'')
 
-        try:
-            data = str(urllib2.urlopen(addr).read())
-        except IOError as e:
-            raise e
+        # Valitdate URL
+        if addr[0:31] != 'http://www.youtube.com/watch?v=':
+            raise Exception(_('error: invalid URL.'))
+
+        data = str(urllib2.urlopen(addr).read())
         
         # abort_download flag
         self.abort_download = False
