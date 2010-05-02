@@ -27,8 +27,9 @@ import gettext, platform
 # Program Information
 program_name = 'GetTube'
 program_name_lower_case = 'gettube'
-program_version = '0.6.6'
+program_version = '0.6.8'
 program_logo = '/usr/share/pixmaps/gettube.png'
+program_banner = '/usr/share/pixmaps/gettubebanner.png'
 
 if platform.system() == 'Windows':
     program_logo = 'gettube.png'

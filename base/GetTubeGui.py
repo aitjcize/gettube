@@ -40,12 +40,11 @@ class GetTubeGui(GetTubeBase):
         self.window.set_position(gtk.WIN_POS_CENTER_ALWAYS)
         self.window.set_border_width(10)
         self.format = 'MP4'
-        self.out_prefix = os.path.expanduser('~/')
+        self.out_prefix = os.path.expanduser('~/').rstrip('/')
 
         # Widgets
-        self.logo = gtk.Button()
-        self.logo.add(gtk.image_new_from_pixbuf(
-            gtk.gdk.pixbuf_new_from_file_at_size(program_logo, 100, 100)))
+        self.banner = gtk.image_new_from_pixbuf(
+                gtk.gdk.pixbuf_new_from_file_at_size(program_banner, 600, 100))
         self.mainframe = gtk.Frame(_('GetTube'))
         self.address_label = gtk.Label(_('Address:'))
         self.address_text = gtk.Entry()
@@ -68,14 +67,14 @@ class GetTubeGui(GetTubeBase):
         self.fmt_but.append(gtk.RadioButton(self.fmt_but[0], 'MP4-720p'))
         self.fmt_but.append(gtk.RadioButton(self.fmt_but[0], 'FLV'))
         self.fmt_but.append(gtk.RadioButton(self.fmt_but[0], 'MP3'))
+        self.version_label = gtk.Label(_('Version %s') % program_version)
+        self.about_button = gtk.Button(_('About this program'))
 
         # Layout
-        vbox = gtk.VBox(False, 0)
-        self.window.add(vbox)
-        hbox = gtk.HBox(True, 0)
-        hbox.pack_start(self.logo, False, False, 0)
-        vbox.pack_start(hbox, False, False, 0)
-        vbox.pack_start(self.mainframe, False, False, 0)
+        Ovbox = gtk.VBox(False, 0)
+        self.window.add(Ovbox)
+        Ovbox.pack_start(self.banner, False, False, 0)
+        Ovbox.pack_start(self.mainframe, False, False, 5)
         hbox = gtk.HBox(False, 0)
         vbox = gtk.VBox(False, 0)
         self.mainframe.add(vbox)
@@ -89,27 +88,31 @@ class GetTubeGui(GetTubeBase):
         separator = gtk.HSeparator()
         vbox.pack_start(separator, True, True, 10)
         vbox.pack_start(self.infoframe, True, True, 0)
-        hbox2 = gtk.HBox(False, 0)
-        hbox2.pack_start(self.infolabel, False, False, 0)
-        hbox2.set_border_width(5)
-        self.infoframe.add(hbox2)
+        hbox = gtk.HBox(False, 0)
+        hbox.pack_start(self.infolabel, False, False, 0)
+        hbox.set_border_width(5)
+        self.infoframe.add(hbox)
         separator = gtk.HSeparator()
         vbox.pack_start(separator, True, True, 10)
         vbox.pack_start(self.formatframe, True, True, 0)
-        hbox2 = gtk.HBox(True, 0)
-        hbox2.set_border_width(5)
+        hbox = gtk.HBox(True, 0)
+        hbox.set_border_width(5)
         for i in range(len(self.fmt_but)):
-            hbox2.pack_start(self.fmt_but[i], False, False, 0)
-        self.formatframe.add(hbox2)
+            hbox.pack_start(self.fmt_but[i], False, False, 0)
+        self.formatframe.add(hbox)
         separator = gtk.HSeparator()
         vbox.pack_start(separator, True, True, 10)
-        hbox2 = gtk.HBox(False, 0)
-        hbox2.pack_start(self.download_progressbar, True, True, 0)
-        hbox2.pack_start(self.abort_download_button, False, False, 5)
-        hbox2.pack_start(self.download_button, False, False, 5)
+        hbox = gtk.HBox(False, 0)
+        hbox.pack_start(self.download_progressbar, True, True, 0)
+        hbox.pack_start(self.abort_download_button, False, False, 5)
+        hbox.pack_start(self.download_button, False, False, 5)
         self.abort_download_button.set_sensitive(False)
         self.download_button.set_sensitive(False)
-        vbox.pack_start(hbox2, True, True, 0)
+        vbox.pack_start(hbox, True, True, 5)
+        hbox = gtk.HBox(False, 0)
+        hbox.pack_start(self.version_label, False, False, 0)
+        hbox.pack_end(self.about_button, False, False, 0)
+        Ovbox.pack_start(hbox, False, False, 0)
         self.clear_info_block(None)
 
         # Connect
@@ -124,7 +127,7 @@ class GetTubeGui(GetTubeBase):
         self.download_button.connect('clicked', self.file_choose_dialog)
         self.window.connect('delete_event', self.close_dialog)
         self.parse_button.connect('clicked', self.parse)
-        self.logo.connect('clicked', self.about_dialog)
+        self.about_button.connect('clicked', self.about_dialog)
 
         # Main
         self.window.show_all()
@@ -221,7 +224,7 @@ class GetTubeGui(GetTubeBase):
         while gtk.events_pending():
             gtk.main_iteration()
 
-    def download(self):
+    def download(self, name):
         '''
         Overriding the base class download to provide graphical interaction.
         '''
@@ -234,7 +237,8 @@ class GetTubeGui(GetTubeBase):
         if self.format != 'FLV':
             address += '&fmt=' + str(self.fmt[self.format][0])
         encoding = locale.getdefaultlocale()[1]
-        name = self.out_prefix + self.outfile + '.' + self.fmt[self.format][1]
+        if name[-4:] != '.' + self.fmt[self.format][1]:
+            name = name + '.' + self.fmt[self.format][1]
         name = name.encode(encoding)
         self.retrieve(address, name, self.retrieve_hook)
 
@@ -275,15 +279,21 @@ class GetTubeGui(GetTubeBase):
         file choose dialog
         '''
         file_dialog = gtk.FileChooserDialog(_('Choose a location'),
-                self.window, gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
+                self.window, gtk.FILE_CHOOSER_ACTION_SAVE,
                 (gtk.STOCK_OK, gtk.RESPONSE_OK, gtk.STOCK_CANCEL,
                     gtk.RESPONSE_CANCEL), None)
+
         file_dialog.set_current_folder(self.out_prefix)
+        file_dialog.set_current_name(self.outfile);
+        filter = gtk.FileFilter()
+        filter.add_pattern('*.' + self.fmt[self.format][1])
+        file_dialog.set_filter(filter)
+
         response = file_dialog.run()
-        self.out_prefix = file_dialog.get_filename() + '/'
         if response == gtk.RESPONSE_OK:
+            fn = file_dialog.get_filename()
             file_dialog.destroy()
-            self.download()
+            self.download(fn)
         else:
             file_dialog.destroy()
 

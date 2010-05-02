@@ -12,7 +12,7 @@ LIB_FILES = base/GetTubeBase.py\
 	    base/Misc.py
 PYTHON_LIB_PATH = /usr/lib/python2.6
 
-LOGO = images/gettube.png
+PICS = images/gettube.png images/gettubebanner.png
 PIXMAPS_PATH = /usr/share/pixmaps
 
 TRANSLATION = translations/gettube.mo
@@ -25,7 +25,7 @@ compile:
 install:
 	cp -f $(DESKTOP) $(DESKTOP_PATH)
 	cp -f $(LIB_FILES) base/*.pyc $(PYTHON_LIB_PATH)
-	cp -f $(LOGO) $(PIXMAPS_PATH)
+	cp -f $(PICS) $(PIXMAPS_PATH)
 	cp -f $(TARGET) $(BIN_PATH)
 	cp -f $(TRANSLATION) $(LOCALE_PATH)
 
