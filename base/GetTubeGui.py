@@ -28,7 +28,7 @@ import gtk
 import locale, os.path, sys, time, gettext
 from GetTubeBase import GetTubeBase
 from GetTubeConvert import ToMp3
-from Misc import *
+from GetTubeMisc import *
 _ = gettext.gettext
 
 class GetTubeGui(GetTubeBase):

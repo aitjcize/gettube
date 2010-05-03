@@ -24,7 +24,7 @@
 
 import os, sys, re, urllib2, platform
 from GetTubeConvert import ToMp3
-from Misc import *
+from GetTubeMisc import *
 _ = gettext.gettext
 
 class GetTubeBase:

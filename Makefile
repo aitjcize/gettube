@@ -9,7 +9,7 @@ BIN_PATH = /usr/bin
 LIB_FILES = base/GetTubeBase.py\
 	    base/GetTubeGui.py\
 	    base/GetTubeConvert.py\
-	    base/Misc.py
+	    base/GetTubeMisc.py
 PYTHON_LIB_PATH = /usr/lib/python2.6
 
 PICS = images/gettube.png images/gettubebanner.png

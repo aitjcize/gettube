@@ -22,10 +22,20 @@
 #
 
 import sys
+from os.path import dirname, abspath, realpath
+
+program = sys.argv[0]
+LANUCH_DIR = dirname(abspath(sys.path[0]))
+
+if program.startswith('./'):
+    sys.path.insert(0, realpath(LANUCH_DIR + '/../gettube/base'))
+elif program.startswith('bin/'):
+    sys.path.insert(0, realpath(LANUCH_DIR + '/base'))
+
 from optparse import OptionParser
 from GetTubeBase import GetTubeBase
 from GetTubeGui import GetTubeGui
-from Misc import *
+from GetTubeMisc import *
 _ = gettext.gettext
 
 def version():

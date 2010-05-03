@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 #
-# Misc.py
+# GetTubeMisc.py
 #
 # Copyright (C) 2010 -  Wei-Ning Huang (AZ) <aitjcize@gmail.com>
 # All Rights reserved.
@@ -22,18 +22,27 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
+from os.path import exists, abspath, dirname
+import sys
 import gettext, platform
 
 # Program Information
 program_name = 'GetTube'
 program_name_lower_case = 'gettube'
 program_version = '0.6.8'
+
 program_logo = '/usr/share/pixmaps/gettube.png'
 program_banner = '/usr/share/pixmaps/gettubebanner.png'
+
+# If lanuch from source directory
+if not exists(program_logo):
+    prefix = dirname(abspath(sys.argv[0]))
+    program_logo = prefix + '/../images/gettube.png'
+    program_banner = prefix + '/../images/gettubebanner.png'
 
 if platform.system() == 'Windows':
     program_logo = 'gettube.png'
 
-# for gettext
+# For gettext
 gettext.bindtextdomain(program_name_lower_case)
 gettext.textdomain(program_name_lower_case)

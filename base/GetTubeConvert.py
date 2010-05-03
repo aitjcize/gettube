@@ -23,7 +23,7 @@
 #
 
 import subprocess, os, time, gtk
-from Misc import *
+from GetTubeMisc import *
 _ = gettext.gettext
 
 def ToMp3(name, gui_running = False):
