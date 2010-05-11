@@ -34,14 +34,15 @@ program_version = '0.6.8'
 program_logo = '/usr/share/pixmaps/gettube.png'
 program_banner = '/usr/share/pixmaps/gettubebanner.png'
 
+# For py2exe packaging
+if platform.system() == 'Windows':
+    program_logo = 'gettube.png'
+
 # If lanuch from source directory
 if not exists(program_logo):
     prefix = dirname(abspath(sys.argv[0]))
     program_logo = prefix + '/../images/gettube.png'
     program_banner = prefix + '/../images/gettubebanner.png'
-
-if platform.system() == 'Windows':
-    program_logo = 'gettube.png'
 
 # For gettext
 gettext.bindtextdomain(program_name_lower_case)

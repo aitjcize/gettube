@@ -40,7 +40,7 @@ def ToMp3(name, gui_running = False):
     except OSError:
         pass
 
-    sobj = subprocess.Popen(cmd, stderr = subprocess.PIPE)
+    sobj = subprocess.Popen(cmd, shell = True)
 
     try:
         while str(sobj.poll()) == 'None':
@@ -57,5 +57,4 @@ def ToMp3(name, gui_running = False):
         print _('error: failed to convert {0} to MP3.').format(name)
         return -1
 
-    os.remove(name)
     return mp3_name

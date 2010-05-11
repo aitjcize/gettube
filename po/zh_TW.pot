@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.6.5\n"
-"POT-Creation-Date: 2010-04-05 11:05+CST\n"
+"POT-Creation-Date: 2010-05-11 17:01+CST\n"
 "PO-Revision-Date: 2010-04-05 11:05+CST\n"
 "Last-Translator: Wei-Ning Huang (AZ) <aitjcize@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -13,8 +13,7 @@ msgstr ""
 "Content-Transfer-Encoding: utf-8\n"
 "Generated-By: pygettext.py 1.5\n"
 
-
-#: GetTubeBase.py:46 GetTubeBase.py:69
+#: GetTubeBase.py:47 GetTubeBase.py:69
 msgid "error: invalid URL."
 msgstr "錯誤: 無效的網址."
 
@@ -188,4 +187,3 @@ msgstr ""
 #: gettube:99
 msgid "error: no URL specified."
 msgstr "錯誤: 沒有指定網址."
-

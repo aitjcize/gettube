@@ -35,7 +35,8 @@ class GetTubeBase:
         Initialize and parse video information
         '''
         # Title replacement strings
-        xmlrp = [ (' ', '_'), ('&quot;', '"'), ('&lt;', '<'), ('&gt;', '>') ]
+        xmlrp = [ (' ', '_'), ('/', ''), ('&quot;', '"'), ('&lt;', '<'),
+                ('&gt;', '>') ]
 
         # Windows does not allow `"' to appear in filename
         if platform.system() == 'Windows':
@@ -54,12 +55,11 @@ class GetTubeBase:
             # address
             self.address = addr
             # id
-            self.id = re.search('(?<=v=)[^&]*', addr).group(0)
+            self.id = re.search('v=([^&]*)', addr).group(1)
             # t
-            self.t = re.search('(?<=&t=).{46}', data).group(0)
+            self.t = re.search('&t=(.{46})', data).group(1)
             # title
-            self.title = re.search('(?<=content=")[^"]*"', data).group(0)
-            self.title = self.title.strip('"')
+            self.title = re.search('content="([^"]*)"', data).group(1)
         except AttributeError:
             if self.retries > 0:
                 print _('error: some error occured during parsing URL, '
@@ -80,9 +80,9 @@ class GetTubeBase:
                 'MP4-720p': (22, 'mp4'), 'MP4-1080p': (37, 'mp4'),
                 'MP3': (18, 'mp4')}
         # disable HD if not found
-        if data.find('22%2F2000000%') == -1:
+        if '22%2F2000000%' not in data:
             self.fmt['MP4-720p'] = (-1, 'mp4')
-        if data.find('37%2F4000000%2F9%2F0%2F115') == -1:
+        if '37%2F4000000%2F9%2F0%2F115' not in data:
             self.fmt['MP4-1080p'] = (-1, 'mp4')
 
     def show(self):
