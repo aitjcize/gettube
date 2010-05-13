@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 #
-# GetTubeGui.py
+# gui.py
 #
 # Copyright (C) 2010 -  Wei-Ning Huang (AZ) <aitjcize@gmail.com>
 # All Rights reserved.
@@ -24,11 +24,14 @@
 
 import pygtk
 pygtk.require('2.0')
-import gtk
-import locale, os.path, sys, time, gettext
-from GetTubeBase import GetTubeBase
-from GetTubeConvert import ToMp3
-from GetTubeMisc import *
+import gtk, locale, os.path, sys, time, gettext
+
+# GetTube package
+from gettube.base import GetTubeBase
+from gettube.utils.convert import ToMp3
+from gettube.misc import *
+
+# for gettext
 _ = gettext.gettext
 
 class GetTubeGui(GetTubeBase):
@@ -69,6 +72,7 @@ class GetTubeGui(GetTubeBase):
         self.fmt_but.append(gtk.RadioButton(self.fmt_but[0], 'MP3'))
         self.version_label = gtk.Label(_('Version %s') % program_version)
         self.about_button = gtk.Button(_('About this program'))
+        self.quit_button = gtk.Button(_('Quit'))
 
         # Layout
         Ovbox = gtk.VBox(False, 0)
@@ -111,7 +115,8 @@ class GetTubeGui(GetTubeBase):
         vbox.pack_start(hbox, True, True, 5)
         hbox = gtk.HBox(False, 0)
         hbox.pack_start(self.version_label, False, False, 0)
-        hbox.pack_end(self.about_button, False, False, 0)
+        hbox.pack_end(self.quit_button, False, False, 0)
+        hbox.pack_end(self.about_button, False, False, 5)
         Ovbox.pack_start(hbox, False, False, 0)
         self.clear_info_block(None)
 
@@ -128,6 +133,7 @@ class GetTubeGui(GetTubeBase):
         self.window.connect('delete_event', self.close_dialog)
         self.parse_button.connect('clicked', self.parse)
         self.about_button.connect('clicked', self.about_dialog)
+        self.quit_button.connect('clicked', self.close_dialog)
 
         # Main
         self.window.show_all()
@@ -306,7 +312,7 @@ class GetTubeGui(GetTubeBase):
         dialog.run()
         dialog.destroy()
 
-    def close_dialog(self, widget, event):
+    def close_dialog(self, widget, event = None):
         '''
         Callback for 'delete_event' to prevent from interrupting download
         process

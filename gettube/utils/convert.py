@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 #
-# GetTubeConvert.py
+# convert.py
 #
 # Copyright (C) 2010 -  Wei-Ning Huang (AZ) <aitjcize@gmail.com>
 # All Rights reserved.
@@ -23,7 +23,7 @@
 #
 
 import subprocess, os, time, gtk
-from GetTubeMisc import *
+from gettube.misc import *
 _ = gettext.gettext
 
 def ToMp3(name, gui_running = False):
@@ -40,7 +40,7 @@ def ToMp3(name, gui_running = False):
     except OSError:
         pass
 
-    sobj = subprocess.Popen(cmd, shell = True)
+    sobj = subprocess.Popen(cmd)
 
     try:
         while str(sobj.poll()) == 'None':

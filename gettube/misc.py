@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 #
-# GetTubeMisc.py
+# misc.py
 #
 # Copyright (C) 2010 -  Wei-Ning Huang (AZ) <aitjcize@gmail.com>
 # All Rights reserved.
@@ -22,28 +22,31 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
-from os.path import exists, abspath, dirname
+from os.path import abspath, dirname
 import sys
 import gettext, platform
 
+# Operating system
+running_os = platform.system()
+
 # Program Information
 program_name = 'GetTube'
-program_name_lower_case = 'gettube'
-program_version = '0.6.8'
+program_version = '0.6.9'
 
-program_logo = '/usr/share/pixmaps/gettube.png'
-program_banner = '/usr/share/pixmaps/gettubebanner.png'
+program_logo = '/usr/share/gettube/images/gettube.png'
+program_banner = '/usr/share/gettube/images/gettubebanner.png'
 
 # For py2exe packaging
-if platform.system() == 'Windows':
+if running_os == 'Windows':
     program_logo = 'gettube.png'
+    program_banner = 'gettubebanner.png'
 
 # If lanuch from source directory
-if not exists(program_logo):
+if not sys.argv[0].startswith('/usr/bin'):
     prefix = dirname(abspath(sys.argv[0]))
     program_logo = prefix + '/../images/gettube.png'
     program_banner = prefix + '/../images/gettubebanner.png'
 
 # For gettext
-gettext.bindtextdomain(program_name_lower_case)
-gettext.textdomain(program_name_lower_case)
+gettext.bindtextdomain(program_name.lower())
+gettext.textdomain(program_name.lower())

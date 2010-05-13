@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 #
-# GetTubeBase.py
+# base.py
 #
 # Copyright (C) 2010 -  Wei-Ning Huang (AZ) <aitjcize@gmail.com>
 # All Rights reserved.
@@ -22,9 +22,13 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
-import os, sys, re, urllib2, platform
-from GetTubeConvert import ToMp3
-from GetTubeMisc import *
+import os, sys, re, urllib2
+
+# GetTube package
+from gettube.utils.convert import ToMp3
+from gettube.misc import *
+
+# for gettext
 _ = gettext.gettext
 
 class GetTubeBase:
@@ -39,8 +43,8 @@ class GetTubeBase:
                 ('&gt;', '>') ]
 
         # Windows does not allow `"' to appear in filename
-        if platform.system() == 'Windows':
-            xmlrp[1] = ('&quot;', '\'')
+        if running_os == 'Windows':
+            xmlrp[2] = ('&quot;', '\'')
 
         # Valitdate URL
         if addr[0:31] != 'http://www.youtube.com/watch?v=':

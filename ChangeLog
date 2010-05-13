@@ -1,3 +1,41 @@
+2010-05-11  AZ Huang <aitjcize@gmail.com>
+
+  * Makefile, base/GetTubeBase.py, base/GetTubeConvert.py, base/GetTubeMisc.py,
+  debian/gettube.desktop, gettube.desktop, po/zh_TW.pot, py2exe/setup.nsi,
+  py2exe/standalone.nsi, translations/gettube.pot: Small changes, clean up
+  source directory.
+
+2010-05-03  AZ Huang <aitjcize@gmail.com>
+
+  * Makefile, base/GetTubeBase.py, base/GetTubeConvert.py, base/GetTubeGui.py,
+  base/GetTubeMisc.py, base/Misc.py, bin/gettube, images/gettube-orig.png,
+  images/gettube.png, images/gettube2.png, images/gettubebanner.png,
+  translations/gettube.pot: Change Logo, add banner. Add source execution path.
+
+2010-05-02  AZ Huang <aitjcize@gmail.com>
+
+  * Makefile, base/GetTubeGui.py, base/Misc.py: Add new banner and change
+  layout
+
+2010-04-14  AZ Huang <aitjcize@gmail.com>
+
+  * base/GetTubeBase.py, base/GetTubeGui.py, base/Misc.py, py2exe/setup.nsi,
+  py2exe/setup.py, translations/gettube.pot: Move URL validation do GetTubeBase
+
+2010-04-09  AZ Huang <aitjcize@gmail.com>
+
+  * base/GetTubeBase.py, base/GetTubeConvert.py, translations/gettube.pot: Add
+  more exception handling. Correct translation.
+
+  * base/GetTubeBase.py, base/GetTubeConvert.py, base/GetTubeGui.py,
+  base/Misc.py, translations/gettube.pot: Add some comments on methods. Fix
+  some bugs on Windows
+
+2010-04-08  AZ Huang <aitjcize@gmail.com>
+
+  * ChangeLog, base/GetTubeConvert.py, base/GetTubeGui.py, py2exe/setup.nsi,
+  translations/gettube.pot: Disable hiding info block when clear
+
 2010-04-07  AZ Huang <aitjcize@gmail.com>
 
   * ChangeLog, base/GetTubeConvert.py: Add $ to cmdrp

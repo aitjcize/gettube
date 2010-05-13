@@ -27,25 +27,27 @@ from os.path import dirname, abspath, realpath
 program = sys.argv[0]
 LANUCH_DIR = dirname(abspath(sys.path[0]))
 
-if program.startswith('./'):
-    sys.path.insert(0, realpath(LANUCH_DIR + '/../gettube/base'))
-elif program.startswith('bin/'):
-    sys.path.insert(0, realpath(LANUCH_DIR + '/base'))
+# If lauched from installed directory
+if sys.path[0] == '/usr/bin':
+    sys.path.insert(0, '/usr/share/gettube')
+# If launched from source directory
+elif program.startswith('./') or program.startswith('bin/'):
+    sys.path.insert(0, LANUCH_DIR)
 
 from optparse import OptionParser
-from GetTubeBase import GetTubeBase
-from GetTubeGui import GetTubeGui
-from GetTubeMisc import *
+from gettube.base import GetTubeBase
+from gettube.gui import GetTubeGui
+from gettube.misc import *
 _ = gettext.gettext
 
 def version():
     sys.stderr.write(
-'{0} Ver {1}\n\
+'%s Ver %s\n\
 Copyright (C) 2010 Aitjcize (Wei-Ning Huang)\n\
 License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.\nThis is free software: you are free to change and redistribute it.\n\
 There is NO WARRANTY, to the extent permitted by law.\n\n\
-Written by Aitjcize (Wei-Ning Huang).\n'
-    .format(program_name, program_version))
+Written by Aitjcize (Wei-Ning Huang).\n' %
+    (program_name, program_version))
 
 def interactive(address, format):
     try:
