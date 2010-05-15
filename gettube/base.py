@@ -22,23 +22,34 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
-import os, sys, re, urllib2
+import os, re, urllib2
 
 # GetTube package
-from gettube.utils.convert import ToMp3
 from gettube.misc import *
 
 # for gettext
 _ = gettext.gettext
 
 class GetTubeBase:
+    '''
+    Base for the GetTube class hierarchy.
+    GetTube -- GetTubeCli
+            \- GetTubeGui
+    '''
+
     # static variable for counting retries
     retries = 5
-    def __init__(self, addr):
+
+    def __init__(self):
+        # Things need to be done are in parse_url
+        pass
+
+    def parse_url(self, addr):
         '''
-        Initialize and parse video information
+        Parse video information.
         '''
-        # Title replacement strings
+
+        # Title replacement pairs
         xmlrp = [ (' ', '_'), ('/', ''), ('&quot;', '"'), ('&lt;', '<'),
                 ('&gt;', '>') ]
 
@@ -46,18 +57,20 @@ class GetTubeBase:
         if running_os == 'Windows':
             xmlrp[2] = ('&quot;', '\'')
 
-        # Valitdate URL
-        if addr[0:31] != 'http://www.youtube.com/watch?v=':
-            raise Exception(_('error: invalid URL.'))
-
-        data = str(urllib2.urlopen(addr).read())
-        
-        # abort_download flag
+        # Reset abort_download flag
         self.abort_download = False
 
+        # Set address
+        self.address = addr
+
+        # Valitdate URL
+        if self.address[0:31] != 'http://www.youtube.com/watch?v=':
+            raise RuntimeError(_('Invalid URL.'))
+
+        # Read data
+        data = str(urllib2.urlopen(addr).read())
+
         try:
-            # address
-            self.address = addr
             # id
             self.id = re.search('v=([^&]*)', addr).group(1)
             # t
@@ -65,85 +78,71 @@ class GetTubeBase:
             # title
             self.title = re.search('content="([^"]*)"', data).group(1)
         except AttributeError:
-            if self.retries > 0:
-                print _('error: some error occured during parsing URL, '
-                        'retris = '), self.retries
-                self.retries -= 1
-                GetTubeBase.__init__(self, addr)
-            raise Exception(_('error: invalid URL.'))
+            print _('Error while parsing URL, retries = %d') % self.retries
+            self.retries -= 1
+            if self.retries == 0:
+                raise RuntimeError(_('Invalid URL.'))
+            else:
+                self.parse_url(self.address)
 
-        # outfile
-        self.outfile = self.title
+        # Replace title xml markings
         for x, y in xmlrp:
-            self.outfile = self.outfile.replace(x, y)
+            self.title = self.title.replace(x, y)
+        self.outname = self.title
+
         # url
-        self.url = 'http://www.youtube.com/get_video?video_id=' + self.id +\
-                '&t=' + self.t
-        # fmt
-        self.fmt = {'FLV': (0, 'flv'), '3GP': (17, '3gp'), 'MP4': (18, 'mp4'),
-                'MP4-720p': (22, 'mp4'), 'MP4-1080p': (37, 'mp4'),
-                'MP3': (18, 'mp4')}
+        self.download_url = 'http://www.youtube.com/get_video?video_id=%s&t=%s'\
+            % (self.id, self.t)
+
+        # List of supported formats
+        # self.fmt[FMT] = [download_type, downloaded_extension, real_extension]
+        self.fmt = {}
+        self.fmt['FLV'] = [0, 'flv', 'flv']
+        self.fmt['3GP'] = [17, '3gp', '3gp']
+        self.fmt['MP4'] = [18, 'mp4', 'mp4']
+        self.fmt['MP4-720p'] = [22, 'mp4', 'mp4']
+        self.fmt['MP4-1080p'] = [37, 'mp4', 'mp4']
+        self.fmt['MP3'] = [18, 'mp4', 'mp3']
+
         # disable HD if not found
         if '22%2F2000000%' not in data:
-            self.fmt['MP4-720p'] = (-1, 'mp4')
+            self.fmt.pop('MP4-720p')
         if '37%2F4000000%2F9%2F0%2F115' not in data:
-            self.fmt['MP4-1080p'] = (-1, 'mp4')
+            self.fmt.pop('MP4-1080p')
 
-    def show(self):
+    def reporthook(self, count, blockSize, totalSize):
         '''
-        Show and return video information
+        Report hook for drawing progress bar
         '''
-        print '-' * 79
-        print _('Title:'), self.title
-        print _('Video ID:'), self.id
-        print _('Video key:'), self.t
-        print '-' * 79
-        print _('Available format:')
-        count = 0
-        avail = []
-        for key, value in self.fmt.items():
-            if value[0] != -1:
-                print '{0}. {1}'.format(count + 1, key)
-                avail.append(key)
-                count += 1
-        print '-' * 79
-        return count, avail
+        pass
 
-    def retrieve_hook(self, count, blockSize, totalSize):
-        '''
-        Retrieve for drawing progress bar
-        '''
-        percentage = count * blockSize * 100 / ((totalSize / blockSize + 1) *
-                (blockSize))
-        sys.stdout.write('\r' + str(percentage) + '% [')
-        sys.stdout.write('=' * int(percentage / 2.5) + '>')
-        sys.stdout.write(' ' * int(40 - percentage / 2.5) + '] ')
-        if percentage == 100:
-            sys.stdout.write('\n')
-        sys.stdout.flush()
-
-    def download(self, fmt):
+    def download(self, fmt, outname = None):
         '''
         Start download
         '''
-        if fmt not in self.fmt or self.fmt[fmt][0] == -1:
-            print _('{0} is not available for this video!').format(fmt)
-            sys.exit(1)
-        url = self.url + '&fmt=' + str(self.fmt[fmt][0])
-        name = self.outfile + '.' + self.fmt[fmt][1]
-        print _('Downloading...')
-        self.retrieve(url, name, self.retrieve_hook)
+        if not outname:
+            outname = self.outname[:]
 
-        # Conversion
-        if fmt == 'MP3':
-            print _('Converting to MP3, this may take a while...')
-            name = ToMp3(name)
-            if name == -1:
-                print _('error: some error occured during the conversion, '
-                        'please try again.')
-                sys.exit(1)
+        if fmt not in self.fmt:
+            raise RuntimeError(_('Format not available for this video.'))
 
-        print _('Saved to `') + name + '\'.'
+        url = self.download_url
+        if fmt != 'FLV':
+            url += '&fmt=' + str(self.fmt[fmt][0])
+        
+        if outname[-4:] != '.' + self.fmt[fmt][1]:
+            outname += '.' + self.fmt[fmt][1]
+
+        try:
+            self.url_retrieve(url, outname, self.reporthook)
+        except KeyboardInterrupt:
+            try:
+                os.remove(outname)
+            except OSError:
+                pass
+            raise Exception(_('Aborted.'))
+
+        return outname
 
     def abort(self, button):
         '''
@@ -151,13 +150,15 @@ class GetTubeBase:
         '''
         self.abort_download = True
 
-    def retrieve(self, url, name, hook):
+    def url_retrieve(self, url, save_name, reporthook):
         '''
-        retrieve implement with urllib2
+        Like the one in urllib. Unlike urllib.retrieve url_retrieve
+        can be interrupted. KeyboardInterrupt exception is rasied when
+        interrupted.
         '''
         count = 0
         blockSize = 4096
-        f = open(name, 'wb')
+        f = open(save_name, 'wb')
 
         urlobj = urllib2.urlopen(url)
         totalSize = int(urlobj.info()['content-length'])
@@ -169,16 +170,12 @@ class GetTubeBase:
                 if not data:
                     break
                 f.write(data)
-                hook(count, blockSize, totalSize)
+                reporthook(count, blockSize, totalSize)
         except KeyboardInterrupt:
             f.close()
-            os.remove(name)
-            print _('\nAborted.')
-            sys.exit(1)
+            self.abort_download = True
+
+        if self.abort_download:
+            raise KeyboardInterrupt
 
         f.close()
-        if self.abort_download:
-            try:
-                os.remove(name)
-            except OSError:
-                pass

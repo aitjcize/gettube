@@ -43,3 +43,7 @@ install:
 clean:
 	rm `find $(LIB_FILES) -name *.pyc`
 	rm $(PO)/*.mo
+
+gettext:
+	pygettext bin/gettube `find -name '*.py'`
+	mv messages.pot po

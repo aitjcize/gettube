@@ -50,11 +50,13 @@ def ToMp3(name, gui_running = False):
                 gtk.main_iteration()
     except KeyboardInterrupt:
         os.remove(mp3_name)
-        print _('Aborted.')
-        return -1
+        raise Exception(_('Aborted.'))
 
     if sobj.poll() != 0:
-        print _('error: failed to convert {0} to MP3.').format(name)
-        return -1
+        raise Exception(_('Failed to convert {0} to MP3.') % name)
 
     return mp3_name
+
+def convert(format, name, gui_running = False):
+    if format == 'MP3':
+        return ToMp3(name, gui_running)

@@ -28,7 +28,7 @@ import gtk, locale, os.path, sys, time, gettext
 
 # GetTube package
 from gettube.base import GetTubeBase
-from gettube.utils.convert import ToMp3
+from gettube.utils.convert import convert
 from gettube.misc import *
 
 # for gettext
@@ -42,7 +42,7 @@ class GetTubeGui(GetTubeBase):
         self.window.resize(620, 180)
         self.window.set_position(gtk.WIN_POS_CENTER_ALWAYS)
         self.window.set_border_width(10)
-        self.format = 'MP4'
+        self.selected_format = 'MP4'
         self.out_prefix = os.path.expanduser('~/').rstrip('/')
 
         # Widgets
@@ -145,7 +145,7 @@ class GetTubeGui(GetTubeBase):
         Callback for selecting format
         '''
         if button.get_active():
-            self.format = format
+            self.selected_format = format
 
     def progress_bar_pulse(self):
         '''
@@ -168,9 +168,8 @@ class GetTubeGui(GetTubeBase):
             self.t))
         self.mainframe.show_all()
         self.progress_bar.hide()
-        total, avail = self.show()
         for i in range(len(self.fmt_but)):
-            if self.fmt_but[i].get_label() not in avail:
+            if self.fmt_but[i].get_label() not in self.fmt.keys():
                 self.fmt_but[i].hide()
 
     def clear_info_block(self, button):
@@ -195,7 +194,7 @@ class GetTubeGui(GetTubeBase):
             self.clear_info_block(None)
         else:
             try:
-                GetTubeBase.__init__(self, address)
+                self.parse_url(address)
             except Exception:
                 self.error_dialog(_('Invalid URL, please reenter.'))
                 self.retries = 5
@@ -218,9 +217,9 @@ class GetTubeGui(GetTubeBase):
             self.download_progressbar.set_fraction(0)
             self.download_progressbar.set_text(_('Ready'))
 
-    def retrieve_hook(self, count, blockSize, totalSize):
+    def reporthook(self, count, blockSize, totalSize):
         '''
-        Overriding the base class retrieve_hook for displaying graphical
+        Overriding the base class report hook for displaying graphical
         progress bar
         '''
         fraction = count * blockSize / float((totalSize / blockSize + 1) *
@@ -230,23 +229,21 @@ class GetTubeGui(GetTubeBase):
         while gtk.events_pending():
             gtk.main_iteration()
 
-    def download(self, name):
+    def fetch(self, name):
         '''
-        Overriding the base class download to provide graphical interaction.
+        Download and convert if needed.
         '''
         self.parse_button.set_sensitive(False)
         self.abort_download_button.set_sensitive(True)
         self.download_button.set_sensitive(False)
         self.clear_button.set_sensitive(False)
         self.formatframe.set_sensitive(False)
-        address = self.url
-        if self.format != 'FLV':
-            address += '&fmt=' + str(self.fmt[self.format][0])
         encoding = locale.getdefaultlocale()[1]
-        if name[-4:] != '.' + self.fmt[self.format][1]:
-            name = name + '.' + self.fmt[self.format][1]
         name = name.encode(encoding)
-        self.retrieve(address, name, self.retrieve_hook)
+        try:
+            saved_name = self.download(self.selected_format, name)
+        except Exception:
+            pass
 
         if self.abort_download:
             self.abort_download = False
@@ -257,7 +254,8 @@ class GetTubeGui(GetTubeBase):
             self.abort_download_button.set_sensitive(False)
 
             # Conversion
-            if self.format == 'MP3':
+            fmt = self.selected_format
+            if self.fmt[fmt][1] != self.fmt[fmt][2]:
                 self.download_progressbar.set_text(_('Converting to MP3, this '
                     'may take a while...'))
 
@@ -265,9 +263,9 @@ class GetTubeGui(GetTubeBase):
                 while gtk.events_pending():
                     gtk.main_iteration()
 
-                name = ToMp3(name, True)
-
-                if name == -1:
+                try:
+                    name = convert(fmt, saved_name, True)
+                except Exception:
                     self.error_dialog(_('Some error occured during the '
                         'conversion, please try again.'))
                     self.download_progressbar.set_text(_('Failed'))
@@ -290,16 +288,16 @@ class GetTubeGui(GetTubeBase):
                     gtk.RESPONSE_CANCEL), None)
 
         file_dialog.set_current_folder(self.out_prefix)
-        file_dialog.set_current_name(self.outfile);
+        file_dialog.set_current_name(self.outname);
         filter = gtk.FileFilter()
-        filter.add_pattern('*.' + self.fmt[self.format][1])
+        filter.add_pattern('*.' + self.fmt[self.selected_format][1])
         file_dialog.set_filter(filter)
 
         response = file_dialog.run()
         if response == gtk.RESPONSE_OK:
             fn = file_dialog.get_filename()
             file_dialog.destroy()
-            self.download(fn)
+            self.fetch(fn)
         else:
             file_dialog.destroy()
 

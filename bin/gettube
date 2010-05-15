@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+#
 # gettube
 #
 # Copyright (C) 2010 -  Wei-Ning Huang (AZ) <aitjcize@gmail.com>
@@ -35,7 +36,7 @@ elif program.startswith('./') or program.startswith('bin/'):
     sys.path.insert(0, LANUCH_DIR)
 
 from optparse import OptionParser
-from gettube.base import GetTubeBase
+from gettube.cli import GetTubeCli
 from gettube.gui import GetTubeGui
 from gettube.misc import *
 _ = gettext.gettext
@@ -49,31 +50,12 @@ There is NO WARRANTY, to the extent permitted by law.\n\n\
 Written by Aitjcize (Wei-Ning Huang).\n' %
     (program_name, program_version))
 
-def interactive(address, format):
-    try:
-        gt = GetTubeBase(address)
-    except Exception as e:
-        print e
-        return
-
-    total, avail = gt.show()
-
-    choice = 0
-    try:
-        while choice <= 0 or choice > total:
-            choice = int(raw_input(_('Choose a format: ')))
-    except (KeyboardInterrupt, ValueError):
-        print _('\nAbort.')
-        sys.exit(1)
-
-    gt.download(avail[choice -1])
-
 def main():
     '''
     main fucntion
     '''
     # parse option
-    parser = OptionParser(usage = 'Usage: gettube [options] [urls]')
+    parser = OptionParser(usage = 'Usage: gettube [options] [URLs]')
     parser.add_option('-v', '--version', action = 'store_true',
             dest = 'version', default = False,
             help = 'Show version information')
@@ -92,26 +74,25 @@ FORMAT can be FLV, 3GP, MP4, MP4-720p, MP4-1080p, default MP4.')
         sys.exit(0)
 
     # GUI mode
-    if options.gui:
+    if options.gui or running_os == 'Windows':
         GetTubeGui()
         sys.exit()
 
     # check
     if len(args) == 0:
-        print _('error: no URL specified.')
+        print _('error: No URL specified.')
         sys.exit(1)
 
+    gt = GetTubeCli()
     for address in args:
         if options.interactive:
-            interactive(address, options.format)
+            gt.interactive(address)
         else:
             try:
-                gt = GetTubeBase(address)
+                gt.parse_url(address)
+                gt.fetch(options.format)
             except Exception as e:
-                print e
-                continue
-
-            gt.download(options.format)
+                print _('error:'), e
 
 if __name__ == '__main__':
     main()
