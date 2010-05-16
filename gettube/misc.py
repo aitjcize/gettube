@@ -26,6 +26,10 @@ from os.path import abspath, dirname
 import sys
 import gettext, platform
 
+# Installation information
+LIB_PATH = '/usr/lib/gettube'
+SHARE_PATH = '/usr/share/gettube'
+
 # Operating system
 running_os = platform.system()
 
@@ -33,8 +37,8 @@ running_os = platform.system()
 program_name = 'GetTube'
 program_version = '0.6.9'
 
-program_logo = '/usr/share/gettube/images/gettube.png'
-program_banner = '/usr/share/gettube/images/gettubebanner.png'
+program_logo = SHARE_PATH + '/images/gettube.png'
+program_banner = SHARE_PATH + '/images/gettubebanner.png'
 
 # For py2exe packaging
 if running_os == 'Windows':

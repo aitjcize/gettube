@@ -24,13 +24,14 @@
 
 import sys
 from os.path import dirname, abspath, realpath
+LIB_PATH = '/usr/lib/gettube'
 
 program = sys.argv[0]
 LANUCH_DIR = dirname(abspath(sys.path[0]))
 
 # If lauched from installed directory
 if sys.path[0] == '/usr/bin':
-    sys.path.insert(0, '/usr/share/gettube')
+    sys.path.insert(0, LIB_PATH)
 # If launched from source directory
 elif program.startswith('./') or program.startswith('bin/'):
     sys.path.insert(0, LANUCH_DIR)
@@ -86,7 +87,10 @@ FORMAT can be FLV, 3GP, MP4, MP4-720p, MP4-1080p, default MP4.')
     gt = GetTubeCli()
     for address in args:
         if options.interactive:
-            gt.interactive(address)
+            try:
+                gt.interactive(address)
+            except Exception as e:
+                print _('error:'), e
         else:
             try:
                 gt.parse_url(address)

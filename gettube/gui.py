@@ -24,7 +24,12 @@
 
 import pygtk
 pygtk.require('2.0')
-import gtk, locale, os.path, sys, time, gettext
+import gettext
+import gtk
+import locale
+import os.path
+import sys
+import time
 
 # GetTube package
 from gettube.base import GetTubeBase
@@ -187,7 +192,7 @@ class GetTubeGui(GetTubeBase):
 
     def parse(self, button):
         '''
-        Parse URL by passing address to the base class constructor
+        Parse URL by passing address to the base parse_url handler
         '''
         address = self.address_text.get_text().strip(' ')
         if address == '':

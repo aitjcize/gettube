@@ -1,15 +1,18 @@
-INSTALL_PATH = /usr/share/gettube
-DESKTOP = debian/gettube.desktop
-DESKTOP_PATH = /usr/share/applications
+# GetTube Makefile
+
 PY_COMPILE = ./py-compile
 MSGFMT = msgfmt
+
+INSTALL_PATH = /usr/share/gettube
+
+DESKTOP = debian/gettube.desktop
+DESKTOP_PATH = /usr/share/applications
 
 TARGET = bin/gettube
 BIN_PATH = /usr/bin
 
 LIB_FILES = gettube
-
-PYTHON_LIB_PATH = /usr/lib/python2.6
+LIB_PATH = /usr/lib/gettube
 
 ICON = images/gettube.png
 PIXMAPS_PATH = /usr/share/pixmaps
@@ -24,16 +27,30 @@ MISC = AUTHORS COPYING README
 
 compile:
 	$(PY_COMPILE) `find $(LIB_FILES) -name *.py`
-	@for p in `ls $(PO)/*.pot`; do $(MSGFMT) $$p -o $${p%pot}mo; done
+	@for p in `ls $(PO)/*.po`; do $(MSGFMT) $$p -o $${p%po}mo; done
 
 install:
+	# Create necessary path
 	mkdir -p $(INSTALL_PATH)
+	mkdir -p $(LIB_PATH)
 	mkdir -p $(IMAGES_PATH)
+
+	# Copy gettube.desktop
 	cp -f $(DESKTOP) $(DESKTOP_PATH)
-	cp -rf $(LIB_FILES) $(INSTALL_PATH)
+
+	# Copy gettube python package
+	cp -rf $(LIB_FILES) $(LIB_PATH)
+
+	# Copy Images
 	cp -f $(IMAGES) $(IMAGES_PATH)
+
+	# Copy Icon
 	cp -f $(ICON) $(PIXMAPS_PATH)
+
+	# Copy Binary executalbe
 	cp -f $(TARGET) $(BIN_PATH)
+
+	# Copy Misc.
 	cp -f $(MISC) $(INSTALL_PATH)
 	@for p in `ls $(PO)/*.mo`; do\
 		tmp=$${p%.mo};\
@@ -45,5 +62,5 @@ clean:
 	rm $(PO)/*.mo
 
 gettext:
-	pygettext bin/gettube `find -name '*.py'`
-	mv messages.pot po
+	xgettext -L python bin/gettube `find -name '*.py'`
+	mv messages.po po

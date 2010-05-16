@@ -45,7 +45,7 @@ class GetTubeCli(GetTubeBase):
         print '-' * 79
         print _('Available format:')
         for count, fmt in enumerate(self.fmt):
-            print count + 1, '. ', fmt
+            print '%d. %s' % (count + 1, fmt)
         print '-' * 79
 
     def reporthook(self, count, blockSize, totalSize):
@@ -93,6 +93,6 @@ class GetTubeCli(GetTubeBase):
             while choice <= 0 or choice > total:
                 choice = int(raw_input(_('Choose a format: ')))
         except KeyboardInterrupt, ValueError:
-            raise Exception(_('\nAborted.'))
+            raise Exception(_('Aborted.'))
 
         gt.fetch(avail[choice -1])
