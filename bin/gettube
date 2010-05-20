@@ -24,6 +24,7 @@
 
 import sys
 from os.path import dirname, abspath, realpath
+from optparse import OptionParser
 LIB_PATH = '/usr/lib/gettube'
 
 program = sys.argv[0]
@@ -36,9 +37,6 @@ if sys.path[0] == '/usr/bin':
 elif program.startswith('./') or program.startswith('bin/'):
     sys.path.insert(0, LANUCH_DIR)
 
-from optparse import OptionParser
-from gettube.cli import GetTubeCli
-from gettube.gui import GetTubeGui
 from gettube.misc import *
 _ = gettext.gettext
 
@@ -73,6 +71,12 @@ FORMAT can be FLV, 3GP, MP4, MP4-720p, MP4-1080p, default MP4.')
     if options.version:
         version()
         sys.exit(0)
+
+    # Import gettube packages
+    # Becuase importing these two modules are heavy work, we don't need to
+    # import it if the user just wants to see 'help' or 'version'
+    from gettube.cli import GetTubeCli
+    from gettube.gui import GetTubeGui
 
     # GUI mode
     if options.gui or running_os == 'Windows':

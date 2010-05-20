@@ -30,6 +30,7 @@ import locale
 import os.path
 import sys
 import time
+import urllib2
 
 # GetTube package
 from gettube.base import GetTubeBase
@@ -200,8 +201,8 @@ class GetTubeGui(GetTubeBase):
         else:
             try:
                 self.parse_url(address)
-            except Exception:
-                self.error_dialog(_('Invalid URL, please reenter.'))
+            except Exception as e:
+                self.error_dialog(str(e))
                 self.retries = 5
                 return
 
@@ -312,6 +313,7 @@ class GetTubeGui(GetTubeBase):
         '''
         dialog = gtk.MessageDialog(self.window, 0, gtk.MESSAGE_ERROR,
                 gtk.BUTTONS_OK, '\n' + message)
+        dialog.set_title(_('Error'))
         dialog.run()
         dialog.destroy()
 

@@ -61,16 +61,16 @@ class GetTubeBase:
 
         # Reset abort_download flag
         self.abort_download = False
-
-        # Set address
         self.address = addr
 
         # Valitdate URL
         if self.address[0:31] != 'http://www.youtube.com/watch?v=':
             raise RuntimeError(_('Invalid URL.'))
 
-        # Read data
-        data = str(urllib2.urlopen(addr).read())
+        try:
+            data = str(urllib2.urlopen(addr).read())
+        except urllib2.URLError:
+            raise Exception(_('No network connection.'))
 
         try:
             # id
@@ -82,7 +82,7 @@ class GetTubeBase:
         except AttributeError:
             print _('Error while parsing URL, retries = %d') % self.retries
             self.retries -= 1
-            if self.retries == 0:
+            if not self.retries:
                 raise RuntimeError(_('Invalid URL.'))
             else:
                 self.parse_url(self.address)
@@ -143,6 +143,8 @@ class GetTubeBase:
             except OSError:
                 pass
             raise Exception(_('Aborted.'))
+        except urllib2.URLError:
+            raise Exception(_('No network connection.'))
 
         return outname
 
@@ -159,7 +161,7 @@ class GetTubeBase:
         interrupted.
         '''
         count = 0
-        blockSize = 4096
+        blockSize = 1024 * 8
         f = open(save_name, 'wb')
 
         urlobj = urllib2.urlopen(url)
@@ -180,4 +182,5 @@ class GetTubeBase:
         if self.abort_download:
             raise KeyboardInterrupt
 
+        del urlobj
         f.close()
