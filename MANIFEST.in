@@ -2,7 +2,7 @@ include README
 include COPYING
 include AUTHORS
 include gettube/*
-include gettube/misc/*
+include gettube/utils/*
 include misc/*
 include images/*
 include po/*
