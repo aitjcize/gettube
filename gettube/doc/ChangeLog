@@ -1,3 +1,36 @@
+2010-06-04  AZ Huang <aitjcize@gmail.com>
+
+  * dev/control, misc/control: Add dev directory
+
+  * MANIFEST.in, bin/gettube, misc/control, setup.cfg: Add control file.
+
+  * MANIFEST.in, Makefile, debian/gettube.desktop, gettube/cli.py,
+  misc/gettube.1, misc/gettube.desktop, po/POTFILES.in, po/zh_TW.po,
+  py-compile, setup.cfg, setup.py: Add setup.py, and packagin related files.
+
+2010-05-20  AZ Huang <aitjcize@gmail.com>
+
+  * bin/gettube, gettube/base.py, gettube/gui.py: Add network connection
+  detect.
+
+2010-05-16  AZ Huang <aitjcize@gmail.com>
+
+  * Makefile, bin/gettube, gettube/base.py, gettube/cli.py, gettube/gui.py,
+  gettube/misc.py, po/zh_TW.po, po/zh_TW.pot: change install location
+
+2010-05-15  AZ Huang <aitjcize@gmail.com>
+
+  * Makefile, bin/gettube, gettube/base.py, gettube/cli.py, gettube/gui.py,
+  gettube/utils/convert.py, po/zh_TW.pot: Seperate interface and clearify class
+  hierarchy
+
+2010-05-14  AZ Huang <aitjcize@gmail.com>
+
+  * ChangeLog, Makefile, base/GetTubeBase.py, base/GetTubeConvert.py,
+  base/GetTubeGui.py, base/GetTubeMisc.py, bin/gettube, gettube/base.py,
+  gettube/gui.py, gettube/misc.py, gettube/utils/convert.py, po/zh_TW.pot,
+  py-compile: change module to package
+
 2010-05-11  AZ Huang <aitjcize@gmail.com>
 
   * Makefile, base/GetTubeBase.py, base/GetTubeConvert.py, base/GetTubeMisc.py,

@@ -11,14 +11,10 @@ _data_files = [
 	('share/man/man1', ['misc/gettube.1'])
 	]
 
-files = ["__init__.py",
-         "base.py",
-         "gui.py",
-	 "cli.py",
-	 "misc.py",
-	 "utils/__init__.py",
-	 "utils/convert.py",
-	]
+files = ["doc/README",
+         "doc/AUTHORS",
+         "doc/COPYING",
+         "doc/Changlog"]
 
 setup(
 	name = 'gettube',

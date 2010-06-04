@@ -1,0 +1,10 @@
+About
+==============================================================================
+GetTube is a python script with GUI that allows you download Youtube videos
+with various format including MP3, MP4, MP4-720p, MP4-1080p, FLV, 3GP.
+
+Note
+==============================================================================
+You need ffmpeg to convert to MP3.
+Windows version is packed with py2exe + NSIS and bunddled with gtk-runtime and
+ffmpeg.
