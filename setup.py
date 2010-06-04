@@ -6,8 +6,8 @@ from DistUtilsExtra.command import *
 _data_files = [
 	('share/applications', ['misc/gettube.desktop']),
 	('share/pixmaps', ['images/gettube.png']),
-	('share/gettube', ['images/gettube.png']),
-	('share/gettube', ['images/gettubebanner.png']),
+	('share/gettube/images', ['images/gettube.png']),
+	('share/gettube/images', ['images/gettubebanner.png']),
 	('share/man/man1', ['misc/gettube.1'])
 	]
 
