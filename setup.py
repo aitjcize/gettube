@@ -24,7 +24,7 @@ setup(
 	author_email = 'aitjcize@gmail.com',
         url = 'http://berelent.blogspot.com/p/gettube-download-youtube-video-fast-and.html',
 	license = 'GPL',
-    	packages = ['gettube'],
+    	packages = ['gettube', 'gettube.utils'],
 	package_data = {'gettube' : files },
 	scripts = ['bin/gettube'],
 	data_files = _data_files,
