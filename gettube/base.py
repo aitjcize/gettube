@@ -107,9 +107,9 @@ class GetTubeBase:
         self.fmt['MP3'] = [18, 'mp4', 'mp3']
 
         # disable HD if not found
-        if '22%2F2000000%' not in data:
+        if '22%2F1280x720' not in data:
             self.fmt.pop('MP4-720p')
-        if '37%2F4000000%2F9%2F0%2F115' not in data:
+        if '37%2F1920x1080' not in data:
             self.fmt.pop('MP4-1080p')
 
     def reporthook(self, count, blockSize, totalSize):
