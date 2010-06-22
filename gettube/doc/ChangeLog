@@ -1,4 +1,15 @@
+2010-06-22  AZ Huang <aitjcize@gmail.com>
+
+  * gettube/base.py: Fix HD detection caused by YouTube format change.
+
 2010-06-04  AZ Huang <aitjcize@gmail.com>
+
+  * setup.py: modify setup.py
+
+  * misc/gettube.1, setup.py: change install path: *.png to images/*.png
+
+  * AUTHORS, COPYING, ChangeLog, gettube/doc/AUTHORS, gettube/doc/COPYING,
+  gettube/doc/ChangeLog, gettube/doc/README, setup.py: Move docs to gettube/doc
 
   * dev/control, misc/control: Add dev directory
 
