@@ -65,6 +65,9 @@ class GetTubeCli(GetTubeBase):
         '''
         Download and convert format if needed.
         '''
+        if fmt not in self.fmt.keys():
+            raise RuntimeError(_('Format not available for this video.'))
+
         print _('Downlaoding...')
         saved_name = self.download(fmt)
 
@@ -92,7 +95,7 @@ class GetTubeCli(GetTubeBase):
         try:
             while choice <= 0 or choice > total:
                 choice = int(raw_input(_('Choose a format: ')))
-        except Exception, KeyboardInterrupt:
+        except (Exception, KeyboardInterrupt):
             raise Exception(_('Aborted.'))
 
         gt.fetch(avail[int(choice) -1])

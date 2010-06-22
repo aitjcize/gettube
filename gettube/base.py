@@ -125,9 +125,6 @@ class GetTubeBase:
         if not outname:
             outname = self.outname[:]
 
-        if fmt not in self.fmt:
-            raise RuntimeError(_('Format not available for this video.'))
-
         url = self.download_url
         if fmt != 'FLV':
             url += '&fmt=' + str(self.fmt[fmt][0])

@@ -1,7 +1,7 @@
-gettube/cli.py
-gettube/misc.py
-gettube/utils/convert.py
-gettube/utils/__init__.py
 gettube/__init__.py
-gettube/gui.py
 gettube/base.py
+gettube/cli.py
+gettube/gui.py
+gettube/misc.py
+gettube/utils/__init__.py
+gettube/utils/convert.py
