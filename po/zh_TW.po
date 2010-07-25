@@ -6,27 +6,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.6.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-06-22 23:44+0800\n"
+"POT-Creation-Date: 2010-07-25 14:38+0800\n"
 "PO-Revision-Date: 2010-04-05 11:05+CST\n"
 "Last-Translator: Wei-Ning Huang (AZ) <aitjcize@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: utf-8\n"
 
-#: ../gettube/base.py:68 ../gettube/base.py:86
+#: ../gettube/base.py:68 ../gettube/base.py:83
 msgid "Invalid URL."
 msgstr "無效的網址."
 
-#: ../gettube/base.py:73 ../gettube/base.py:144
-msgid "No network connection."
-msgstr "無網路連線."
-
-#: ../gettube/base.py:83
+#: ../gettube/base.py:80
 #, python-format
 msgid "Error while parsing URL, retries = %d"
 msgstr "分析網址的過程中發生錯誤, 重試次數 = %d"
 
-#: ../gettube/base.py:142 ../gettube/cli.py:99 ../gettube/utils/convert.py:53
+#: ../gettube/base.py:139 ../gettube/cli.py:99 ../gettube/utils/convert.py:53
 msgid "Aborted."
 msgstr "已中止."
 
@@ -51,7 +47,7 @@ msgid "Format not available for this video."
 msgstr "影片無此格式!"
 
 #: ../gettube/cli.py:71
-msgid "Downlaoding..."
+msgid "Downloading..."
 msgstr "下載中..."
 
 #: ../gettube/cli.py:76
@@ -130,7 +126,7 @@ msgstr "離開"
 msgid "Aborted"
 msgstr "已中止"
 
-#: ../gettube/gui.py:259 ../gettube/gui.py:279
+#: ../gettube/gui.py:259 ../gettube/gui.py:280
 msgid "Done"
 msgstr "完成"
 
@@ -138,31 +134,31 @@ msgstr "完成"
 msgid "Converting to MP3, this may take a while..."
 msgstr "正在轉換成MP3中, 可能會花一段時間..."
 
-#: ../gettube/gui.py:275
+#: ../gettube/gui.py:276
 msgid "Some error occured during the conversion, please try again."
 msgstr "轉換的過成中發生了錯誤, 請重試一次."
 
-#: ../gettube/gui.py:277
+#: ../gettube/gui.py:278
 msgid "Failed"
 msgstr "失敗"
 
-#: ../gettube/gui.py:291
+#: ../gettube/gui.py:292
 msgid "Choose a location"
 msgstr "選擇一個位置"
 
-#: ../gettube/gui.py:316
+#: ../gettube/gui.py:317
 msgid "Error"
 msgstr "錯誤"
 
-#: ../gettube/gui.py:333
+#: ../gettube/gui.py:334
 msgid "Download in progress"
 msgstr "下載尚未完成"
 
-#: ../gettube/gui.py:334
+#: ../gettube/gui.py:335
 msgid "Do you want to quit?"
 msgstr "要離開嗎?"
 
-#: ../gettube/gui.py:351
+#: ../gettube/gui.py:352
 msgid ""
 "Download YouTube video Easily\n"
 " With formats:\n"
@@ -171,7 +167,7 @@ msgstr ""
 "輕易的下載YouTube影片\n"
 "包括MP3, MP4, FLV 和 MP4-HD"
 
-#: ../gettube/gui.py:367
+#: ../gettube/gui.py:368
 msgid "Copyright 2010 Wei-Ning Huang (AZ)"
 msgstr "版權所有 2010 黃偉寧(AZ)"
 

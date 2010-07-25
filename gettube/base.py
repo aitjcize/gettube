@@ -67,10 +67,7 @@ class GetTubeBase:
         if self.address[0:31] != 'http://www.youtube.com/watch?v=':
             raise RuntimeError(_('Invalid URL.'))
 
-        try:
-            data = str(urllib2.urlopen(addr).read())
-        except urllib2.URLError:
-            raise Exception(_('No network connection.'))
+        data = str(urllib2.urlopen(addr).read())
 
         try:
             # id
@@ -93,8 +90,8 @@ class GetTubeBase:
         self.outname = self.title
 
         # url
-        self.download_url = 'http://www.youtube.com/get_video?video_id=%s&t=%s'\
-            % (self.id, self.t)
+        self.download_url = 'http://www.youtube.com/get_video?video_id=%s'\
+                '&eurl=&el=&ps=&asv=&t=%s' % (self.id, self.t)
 
         # List of supported formats
         # self.fmt[FMT] = [download_type, downloaded_extension, real_extension]
@@ -140,8 +137,6 @@ class GetTubeBase:
             except OSError:
                 pass
             raise Exception(_('Aborted.'))
-        except urllib2.URLError:
-            raise Exception(_('No network connection.'))
 
         return outname
 
@@ -162,6 +157,7 @@ class GetTubeBase:
         f = open(save_name, 'wb')
 
         urlobj = urllib2.urlopen(url)
+
         totalSize = int(urlobj.info()['content-length'])
 
         try:

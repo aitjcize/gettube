@@ -68,7 +68,7 @@ class GetTubeCli(GetTubeBase):
         if fmt not in self.fmt.keys():
             raise RuntimeError(_('Format not available for this video.'))
 
-        print _('Downlaoding...')
+        print _('Downloading...')
         saved_name = self.download(fmt)
 
         # if downloaded extension != real extention, we need to convert
