@@ -20,7 +20,7 @@ rm *.ex *.EX README.*
 dch -e
 cd ..
 
-if [ "$1" == "build" ]; then
+if [ "$1" == "deb" ]; then
   dpkg-buildpackage -rfakeroot
 elif [ "$1" == "ppa" ]; then
   debuild -S
