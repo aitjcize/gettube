@@ -75,7 +75,7 @@ class GetTubeBase:
             # t
             self.t = re.search('&t=(.{46})', data).group(1)
             # title
-            self.title = re.search('content="([^"]*)"', data).group(1)
+            self.title = re.search('"title" content="([^"]*)"', data).group(1)
         except AttributeError:
             print _('Error while parsing URL, retries = %d') % self.retries
             self.retries -= 1
@@ -98,7 +98,7 @@ class GetTubeBase:
         self.fmt = {}
         self.fmt['FLV'] = [0, 'flv', 'flv']
         self.fmt['3GP'] = [17, '3gp', '3gp']
-        self.fmt['MP4'] = [18, 'mp4', 'mp4']
+        self.fmt['MP4-480p'] = [35, 'mp4', 'mp4']
         self.fmt['MP4-720p'] = [22, 'mp4', 'mp4']
         self.fmt['MP4-1080p'] = [37, 'mp4', 'mp4']
         self.fmt['MP3'] = [18, 'mp4', 'mp3']
