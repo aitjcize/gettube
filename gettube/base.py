@@ -98,12 +98,14 @@ class GetTubeBase:
         self.fmt = {}
         self.fmt['FLV'] = [0, 'flv', 'flv']
         self.fmt['3GP'] = [17, '3gp', '3gp']
-        self.fmt['MP4-480p'] = [35, 'mp4', 'mp4']
+        self.fmt['MP4'] = [35, 'mp4', 'mp4']
         self.fmt['MP4-720p'] = [22, 'mp4', 'mp4']
         self.fmt['MP4-1080p'] = [37, 'mp4', 'mp4']
         self.fmt['MP3'] = [18, 'mp4', 'mp3']
 
         # disable HD if not found
+        if '35%2F854x480' not in data:
+            self.fmt['MP4'] = [18, 'mp4', 'mp4']
         if '22%2F1280x720' not in data:
             self.fmt.pop('MP4-720p')
         if '37%2F1920x1080' not in data:

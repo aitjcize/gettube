@@ -48,7 +48,7 @@ class GetTubeGui(GetTubeBase):
         self.window.resize(620, 180)
         self.window.set_position(gtk.WIN_POS_CENTER_ALWAYS)
         self.window.set_border_width(10)
-        self.selected_format = 'MP4-480p'
+        self.selected_format = 'MP4'
         self.out_prefix = os.path.expanduser('~/').rstrip('/')
 
         # Widgets
@@ -69,11 +69,11 @@ class GetTubeGui(GetTubeBase):
         self.download_progressbar = gtk.ProgressBar()
         self.download_progressbar.set_text(_('Ready'))
         self.fmt_but = []
-        self.fmt_but.append(gtk.RadioButton(None, '3GP'))
-        self.fmt_but.append(gtk.RadioButton(self.fmt_but[0], 'MP4-1080p'))
+        self.fmt_but.append(gtk.RadioButton(None, 'MP4-1080p'))
         self.fmt_but.append(gtk.RadioButton(self.fmt_but[0], 'MP4-720p'))
-        self.fmt_but.append(gtk.RadioButton(self.fmt_but[0], 'MP4-480p'))
-        self.fmt_but[3].set_active(True)
+        self.fmt_but.append(gtk.RadioButton(self.fmt_but[0], 'MP4'))
+        self.fmt_but[2].set_active(True)
+        self.fmt_but.append(gtk.RadioButton(self.fmt_but[0], '3GP'))
         self.fmt_but.append(gtk.RadioButton(self.fmt_but[0], 'FLV'))
         self.fmt_but.append(gtk.RadioButton(self.fmt_but[0], 'MP3'))
         self.version_label = gtk.Label(_('Version %s') % program_version)
@@ -127,10 +127,10 @@ class GetTubeGui(GetTubeBase):
         self.clear_info_block(None)
 
         # Connect
-        self.fmt_but[0].connect('toggled', self.choose, '3GP')
-        self.fmt_but[1].connect('toggled', self.choose, 'MP4-480p')
-        self.fmt_but[2].connect('toggled', self.choose, 'MP4-1080p')
-        self.fmt_but[3].connect('toggled', self.choose, 'MP4-720p')
+        self.fmt_but[0].connect('toggled', self.choose, 'MP4-1080p')
+        self.fmt_but[1].connect('toggled', self.choose, 'MP4-720p')
+        self.fmt_but[2].connect('toggled', self.choose, 'MP4')
+        self.fmt_but[3].connect('toggled', self.choose, '3GP')
         self.fmt_but[4].connect('toggled', self.choose, 'FLV')
         self.fmt_but[5].connect('toggled', self.choose, 'MP3')
         self.clear_button.connect('clicked', self.clear_info_block)

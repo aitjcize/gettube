@@ -57,8 +57,9 @@ def main():
     parser.add_option('-i', '--interactive', action = 'store_true',
             dest = 'interactive', default = False, help = 'Interactive mode')
     parser.add_option('-f', action = 'store', type = 'string',
-            dest = 'format', default = 'MP4', help = 'Select download format. \
-FORMAT can be FLV, 3GP, MP4, MP4-720p, MP4-1080p, default MP4.')
+            dest = 'format', default = 'MP4', help = 'Select download '
+                   'format. FORMAT can be FLV, 3GP, MP4, '
+                   'MP4-720p, MP4-1080p, default MP4.')
     parser.add_option('-g', '--gui', action = 'store_true',
             dest = 'gui', default = False, help = 'GUI mode')
 
