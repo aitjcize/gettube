@@ -35,7 +35,7 @@ running_os = platform.system()
 
 # Program Information
 program_name = 'GetTube'
-program_version = '0.7.1'
+program_version = '0.7.2'
 
 program_logo = SHARE_PATH + '/images/gettube.png'
 program_banner = SHARE_PATH + '/images/gettubebanner.png'

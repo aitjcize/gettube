@@ -18,7 +18,7 @@ files = ["doc/README",
 
 setup(
 	name = 'gettube',
-	version = '0.7.1',
+	version = '0.7.2',
 	description = 'Download YouTube Videos, Fast and Easy!',
 	author = 'Wei-Ning Huang (AZ)',
 	author_email = 'aitjcize@gmail.com',
